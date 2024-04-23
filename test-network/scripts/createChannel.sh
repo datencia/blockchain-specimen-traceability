@@ -2,8 +2,6 @@
 
 # imports  
 . scripts/envVar.sh
-. scripts/utils.sh
-
 
 CHANNEL_NAME="$1"
 DELAY="$2"
@@ -17,7 +15,11 @@ BFT="$5"
 : ${BFT:=0}
 
 : ${CONTAINER_CLI:="docker"}
-: ${CONTAINER_CLI_COMPOSE:="${CONTAINER_CLI} compose"}
+if command -v ${CONTAINER_CLI}-compose > /dev/null 2>&1; then
+    : ${CONTAINER_CLI_COMPOSE:="${CONTAINER_CLI}-compose"}
+else
+    : ${CONTAINER_CLI_COMPOSE:="${CONTAINER_CLI} compose"}
+fi
 infoln "Using ${CONTAINER_CLI} and ${CONTAINER_CLI_COMPOSE}"
 
 if [ ! -d "channel-artifacts" ]; then
@@ -90,7 +92,7 @@ joinChannel() {
 
 setAnchorPeer() {
   ORG=$1
-  ${CONTAINER_CLI} exec cli ./scripts/setAnchorPeer.sh $ORG $CHANNEL_NAME 
+  . scripts/setAnchorPeer.sh $ORG $CHANNEL_NAME 
 }
 
 

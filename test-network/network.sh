@@ -29,7 +29,11 @@ trap "popd > /dev/null" EXIT
 . scripts/utils.sh
 
 : ${CONTAINER_CLI:="docker"}
-: ${CONTAINER_CLI_COMPOSE:="${CONTAINER_CLI} compose"}
+if command -v ${CONTAINER_CLI}-compose > /dev/null 2>&1; then
+    : ${CONTAINER_CLI_COMPOSE:="${CONTAINER_CLI}-compose"}
+else
+    : ${CONTAINER_CLI_COMPOSE:="${CONTAINER_CLI} compose"}
+fi
 infoln "Using ${CONTAINER_CLI} and ${CONTAINER_CLI_COMPOSE}"
 
 # Obtain CONTAINER_IDS and remove them
@@ -66,10 +70,10 @@ function checkPrereqs() {
     errorln "https://hyperledger-fabric.readthedocs.io/en/latest/install.html"
     exit 1
   fi
-  # use the fabric tools container to see if the samples and binaries match your
+  # use the fabric peer container to see if the samples and binaries match your
   # docker images
   LOCAL_VERSION=$(peer version | sed -ne 's/^ Version: //p')
-  DOCKER_IMAGE_VERSION=$(${CONTAINER_CLI} run --rm hyperledger/fabric-tools:2.5.4 peer version | sed -ne 's/^ Version: //p')
+  DOCKER_IMAGE_VERSION=$(${CONTAINER_CLI} run --rm hyperledger/fabric-peer:2.5.7 peer version | sed -ne 's/^ Version: //p')
 
   infoln "LOCAL_VERSION=$LOCAL_VERSION"
   infoln "DOCKER_IMAGE_VERSION=$DOCKER_IMAGE_VERSION"
@@ -115,7 +119,7 @@ function checkPrereqs() {
       exit 1
     fi
     CA_LOCAL_VERSION=$(fabric-ca-client version | sed -ne 's/ Version: //p')
-    CA_DOCKER_IMAGE_VERSION=$(${CONTAINER_CLI} run --rm hyperledger/fabric-ca:1.5.7 fabric-ca-client version | sed -ne 's/ Version: //p' | head -1)
+    CA_DOCKER_IMAGE_VERSION=$(${CONTAINER_CLI} run --rm hyperledger/fabric-ca:1.5.10 fabric-ca-client version | sed -ne 's/ Version: //p' | head -1)
     infoln "CA_LOCAL_VERSION=$CA_LOCAL_VERSION"
     infoln "CA_DOCKER_IMAGE_VERSION=$CA_DOCKER_IMAGE_VERSION"
 
@@ -254,7 +258,7 @@ function createOrgs() {
 
 # The configtxgen tool is used to create the genesis block. Configtxgen consumes a
 # "configtx.yaml" file that contains the definitions for the sample network. The
-# genesis block is defined using the "TwoOrgsApplicationGenesis" profile at the bottom
+# genesis block is defined using the "ChannelUsingRaft" profile at the bottom
 # of the file. This profile defines an application channel consisting of our two Peer Orgs.
 # The peer and ordering organizations are defined in the "Profiles" section at the
 # top of the file. As part of each organization profile, the file points to the

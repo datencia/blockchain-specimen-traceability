@@ -18,7 +18,7 @@ services:
 
   orderer.example.com:
     container_name: orderer.example.com
-    image: hyperledger/fabric-orderer:2.5.4
+    image: hyperledger/fabric-orderer:2.5.7
     labels:
       service: hyperledger-fabric
     environment:
@@ -60,7 +60,7 @@ services:
 
   peer0.org1.example.com:
     container_name: peer0.org1.example.com
-    image: hyperledger/fabric-peer:2.5.4
+    image: hyperledger/fabric-peer:2.5.7
     labels:
       service: hyperledger-fabric
     environment:
@@ -99,7 +99,7 @@ services:
 
   peer0.org2.example.com:
     container_name: peer0.org2.example.com
-    image: hyperledger/fabric-peer:2.5.4
+    image: hyperledger/fabric-peer:2.5.7
     labels:
       service: hyperledger-fabric
     environment:
@@ -133,28 +133,5 @@ services:
     ports:
       - 9051:9051
       - 9445:9445
-    networks:
-      - test
-
-  cli:
-    container_name: cli
-    image: hyperledger/fabric-tools:2.5.4
-    labels:
-      service: hyperledger-fabric
-    tty: true
-    stdin_open: true
-    environment:
-      - GOPATH=/opt/gopath
-      - FABRIC_LOGGING_SPEC=INFO
-      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
-      #- FABRIC_LOGGING_SPEC=DEBUG
-    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
-    command: /bin/bash
-    volumes:
-      - ../organizations:/opt/gopath/src/github.com/hyperledger/fabric/peer/organizations
-      - ../scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
-    depends_on:
-      - peer0.org1.example.com
-      - peer0.org2.example.com
     networks:
       - test
