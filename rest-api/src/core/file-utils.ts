@@ -14,3 +14,12 @@ export async function getFirstDirFileBuffer(dirPath: string): Promise<Buffer> {
 export function resolvePath(...paths: string[]): string {
     return path.resolve(...paths);
 }
+
+export async function dirExists(dirPath: string): Promise<boolean> {
+    try {
+        await fs.access(dirPath, fs.constants.F_OK);
+        return true;
+    } catch (err) {
+        return false;
+    }
+}

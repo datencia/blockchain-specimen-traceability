@@ -10,6 +10,7 @@ export const validationSchema = Joi.object({
     PEER_HOST_ALIAS: Joi.string().required(),
     MSP_ID: Joi.string().required(),
     CRYPTO_PATH: Joi.string().required(),
+    SECRET: Joi.string().default('s3cr3t'),
 });
 
 export const validationOptions = {
