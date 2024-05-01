@@ -39,7 +39,7 @@ describe('GatewayClientService', () => {
             ],
         }).compile();
 
-        service = module.get<GatewayClientService>(GatewayClientService);
+        service = await module.resolve<GatewayClientService>(GatewayClientService);
     });
 
     it('should be defined', () => {
