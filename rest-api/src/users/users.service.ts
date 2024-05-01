@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { dirExists, resolvePath } from '@core/file-utils';
+import { dirExists, resolvePath } from '@common/utils';
 
 // TODO This should be a real class/interface representing a user entity
 export type User = any;

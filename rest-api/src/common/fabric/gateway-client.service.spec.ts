@@ -3,7 +3,7 @@ import { REQUEST } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 
 import { GatewayClientService } from './gateway-client.service';
-import { GrpcClientService } from './grpc-client.service';
+import { GrpcClientService } from '@common/grpc';
 
 describe('GatewayClientService', () => {
     let service: GatewayClientService;

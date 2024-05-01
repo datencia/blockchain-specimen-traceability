@@ -12,7 +12,8 @@
     "baseUrl": "./",
     "incremental": true,
     "paths": {
-      "@core/*": ["src/core/*"]
+      "@common": ["./src/common/index"],
+      "@common/*": ["./src/common/*"],
     },
     "skipLibCheck": true,
     "strictNullChecks": false,

@@ -6,8 +6,8 @@ import { Request } from 'express';
 import { connect, Gateway, Identity, Signer, signers } from '@hyperledger/fabric-gateway';
 import * as crypto from 'crypto';
 
-import { GrpcClientService } from './grpc-client.service';
-import { getFirstDirFileBuffer, resolvePath } from '@core/file-utils';
+import { GrpcClientService } from '@common/grpc';
+import { getFirstDirFileBuffer, resolvePath } from '@common/utils';
 
 @Injectable({ scope: Scope.REQUEST })
 export class GatewayClientService {
