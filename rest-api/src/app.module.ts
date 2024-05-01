@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { validationOptions, validationSchema } from './config';
+import { FabricModule } from './fabric/fabric.module';
 
 @Module({
     imports: [
@@ -11,6 +12,7 @@ import { validationOptions, validationSchema } from './config';
             validationSchema,
             validationOptions,
         }),
+        FabricModule,
     ],
     controllers: [AppController],
     providers: [AppService],

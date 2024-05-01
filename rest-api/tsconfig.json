@@ -11,6 +11,9 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
+    "paths": {
+      "@core/*": ["src/core/*"]
+    },
     "skipLibCheck": true,
     "strictNullChecks": false,
     "noImplicitAny": false,
