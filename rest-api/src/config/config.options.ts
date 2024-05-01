@@ -1,6 +1,8 @@
+import { ConfigModuleOptions } from '@nestjs/config';
+
 import * as Joi from 'joi';
 
-export const validationSchema = Joi.object({
+const validationSchema = Joi.object({
     NODE_ENV: Joi.string()
         .valid('development', 'production', 'test', 'provision')
         .default('development'),
@@ -13,7 +15,9 @@ export const validationSchema = Joi.object({
     SECRET: Joi.string().default('s3cr3t'),
 });
 
-export const validationOptions = {
+const validationOptions = {
     allowUnknown: true,
     abortEarly: true,
 };
+
+export const configOptions: ConfigModuleOptions = { validationSchema, validationOptions };
