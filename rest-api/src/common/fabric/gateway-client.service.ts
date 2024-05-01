@@ -1,4 +1,4 @@
-import { Inject, Injectable, Scope } from '@nestjs/common';
+import { Inject, Injectable, Logger, Scope } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 
@@ -11,6 +11,7 @@ import { getFirstDirFileBuffer, resolvePath } from '@common/utils';
 
 @Injectable({ scope: Scope.REQUEST })
 export class GatewayClientService {
+    private readonly logger = new Logger(GatewayClientService.name);
     private readonly MSP_ID: string = this.configService.get<string>('MSP_ID');
     private readonly CRYPTO_PATH: string = this.configService.get<string>('CRYPTO_PATH');
 
@@ -31,6 +32,7 @@ export class GatewayClientService {
     }
 
     private async initFabricGateway(username: string): Promise<void> {
+        this.logger.debug(`Creating new Fabric gateway connection for user ${username}...`);
         const currentDate = Date.now();
         const client = await this.grpcClientService.getClient();
         this._gateway = connect({

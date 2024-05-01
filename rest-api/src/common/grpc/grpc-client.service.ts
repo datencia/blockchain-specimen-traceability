@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { promises as fs } from 'fs';
@@ -8,6 +8,7 @@ import * as grpc from '@grpc/grpc-js';
 export class GrpcClientService {
     private _client: grpc.Client;
 
+    private readonly logger = new Logger(GrpcClientService.name);
     private readonly tlsCertPath: string = this.configService.get<string>('TLS_CERT_PATH');
     private readonly peerEndpoint: string = this.configService.get<string>('PEER_ENDPOINT');
     private readonly peerHostAlias: string = this.configService.get<string>('PEER_HOST_ALIAS');
@@ -26,6 +27,7 @@ export class GrpcClientService {
     }
 
     private async initGrpcConnection(): Promise<grpc.Client> {
+        this.logger.debug(`Creating new gRPC client to ${this.peerEndpoint}...`);
         const tlsRootCert = await fs.readFile(this.tlsCertPath);
         const tlsCredentials = grpc.credentials.createSsl(tlsRootCert);
         return new grpc.Client(this.peerEndpoint, tlsCredentials, {

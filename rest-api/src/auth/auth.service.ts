@@ -14,12 +14,13 @@ export class AuthService {
     ) {}
 
     async validateUser(username: string, pass: string): Promise<any> {
+        this.logger.verbose(`Validating user ${username}...`);
         const user = await this.usersService.findOne(username);
         // TODO investigate another approach to assign a unique password to every test-network user
         if (user && pass === this.SECRET) {
             return user;
         }
-        this.logger.warn(`User not found or password invalid!`);
+        this.logger.error(`User ${user} not found or password invalid!`);
         return null;
     }
 }
