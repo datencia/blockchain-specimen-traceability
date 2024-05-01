@@ -12,8 +12,14 @@
     "baseUrl": "./",
     "incremental": true,
     "paths": {
+      "@auth": ["./src/auth/index"],
+      "@auth/*": ["./src/auth/*"],
       "@common": ["./src/common/index"],
       "@common/*": ["./src/common/*"],
+      "@config": ["./src/config/index"],
+      "@config/*": ["./src/config/*"],
+      "@users": ["./src/users/index"],
+      "@users/*": ["./src/users/*"]
     },
     "skipLibCheck": true,
     "strictNullChecks": false,

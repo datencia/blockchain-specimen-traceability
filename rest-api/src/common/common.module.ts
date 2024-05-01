@@ -1,8 +1,8 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
-import { GatewayClientService } from '@common/fabric';
-import { GrpcClientService } from '@common/grpc';
+import { GatewayClientService } from './fabric';
+import { GrpcClientService } from './grpc';
 
 @Global()
 @Module({
