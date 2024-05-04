@@ -46,3 +46,12 @@ Before you start, you must install some prerequisite technology required:
     export FABRIC_CFG_PATH=$PWD/../config/
     ./network.sh deployCC -ccn basic -ccp ../chaincode -ccl typescript
     ```
+
+## Clean up
+
+When you are finished, you can bring down the test network (from the `test-network` folder). The command will remove all
+the nodes of the test network, and delete any ledger data that you created.
+
+```shell
+./network.sh down
+```
