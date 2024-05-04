@@ -8,6 +8,14 @@ This repository contains my bachelor's project in computer science completed at 
 
 The project is about the creation of a traceability system for pathological anatomy samples based on blockchain
 
+## Prerequisites
+
+Before you start, you must install some prerequisite technology required:
+
+- [Docker](https://www.docker.com/get-started) (and docker-compose)
+- [Node.js](https://nodejs.org/en/about/) v18 or higher
+- [Jq](https://jqlang.github.io/jq/)
+
 ## Quickstart
 
 1. Clone this repo
@@ -24,7 +32,7 @@ The project is about the creation of a traceability system for pathological anat
     ./scripts/install.sh
     ```
 
-1. Run the test network and create a channel
+1. Create the test network and a channel (from the `test-network` folder)
 
     ```shell
     cd test-network
