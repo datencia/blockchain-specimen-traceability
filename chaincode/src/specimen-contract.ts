@@ -85,4 +85,14 @@ export class SpecimenContract extends Contract {
         }
         return JSON.stringify(allResults);
     }
+
+    // ReadSpecimen returns the specimen stored in the world state with given id.
+    @Transaction(false)
+    public async ReadSpecimen(ctx: Context, id: string): Promise<string> {
+        const assetJSON = await ctx.stub.getState(id);
+        if (!assetJSON || assetJSON.length === 0) {
+            throw new Error(`The specimen ${id} does not exist`);
+        }
+        return assetJSON.toString();
+    }
 }
