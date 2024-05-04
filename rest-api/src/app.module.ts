@@ -6,6 +6,7 @@ import { CommonModule } from '@common';
 import { RequestIdMiddleware } from '@common/middlewares';
 import { UsersModule } from '@users';
 import { AuthModule } from '@auth';
+import { SpecimensModule } from './specimens/specimens.module';
 
 @Module({
     imports: [
@@ -13,6 +14,7 @@ import { AuthModule } from '@auth';
         UsersModule,
         AuthModule,
         CommonModule,
+        SpecimensModule,
     ],
 })
 export class AppModule implements NestModule {
