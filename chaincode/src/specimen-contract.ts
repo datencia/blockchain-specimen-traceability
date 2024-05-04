@@ -63,4 +63,26 @@ export class SpecimenContract extends Contract {
             console.info(`Specimen ${asset.id} initialized!`);
         }
     }
+
+    // GetAllSpecimens returns all specimens found in the world state.
+    @Transaction(false)
+    @Returns('string')
+    public async GetAllSpecimens(ctx: Context): Promise<string> {
+        const allResults = [];
+        const iterator = await ctx.stub.getStateByRange('', '');
+        let result = await iterator.next();
+        while (!result.done) {
+            const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+            let record: string;
+            try {
+                record = JSON.parse(strValue);
+            } catch (err) {
+                console.log(err);
+                record = strValue;
+            }
+            allResults.push(record);
+            result = await iterator.next();
+        }
+        return JSON.stringify(allResults);
+    }
 }
