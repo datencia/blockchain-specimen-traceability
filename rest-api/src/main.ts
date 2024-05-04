@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import helmet from 'helmet';
@@ -11,8 +12,15 @@ async function bootstrap() {
     const configService: ConfigService = app.get(ConfigService);
 
     app.setGlobalPrefix('api');
-    app.enableCors();
     app.use(helmet());
+    app.enableCors();
+    app.useGlobalPipes(
+        new ValidationPipe({
+            whitelist: true,
+            forbidNonWhitelisted: true,
+            transform: true,
+        }),
+    );
 
     await app.listen(configService.get<number>('PORT'));
 }
