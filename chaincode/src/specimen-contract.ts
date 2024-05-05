@@ -97,4 +97,47 @@ export class SpecimenContract extends Contract {
         }
         return assetJSON.toString();
     }
+
+    // RegisterExtractedSpecimen issues a new specimen to the world state with given details.
+    @Transaction()
+    public async RegisterExtractedSpecimen(
+        ctx: Context,
+        id: string,
+        name: string,
+        label: string,
+        method: string,
+        collectionTime: number,
+        collector: string,
+        owner: string,
+        patientId: string,
+    ): Promise<Specimen> {
+        const exists = await this.SpecimenExists(ctx, id);
+        if (exists) {
+            throw new Error(`The specimen ${id} already exists`);
+        }
+
+        const status = 'EXTRACTED';
+        const specimen: Specimen = {
+            id,
+            name,
+            label,
+            status,
+            patientId,
+            method,
+            collector,
+            collectionTime,
+            owner,
+        };
+        await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(specimen))));
+
+        return specimen;
+    }
+
+    // SpecimenExists returns true when specimen with given ID exists in world state.
+    @Transaction(false)
+    @Returns('boolean')
+    public async SpecimenExists(ctx: Context, id: string): Promise<boolean> {
+        const assetJSON = await ctx.stub.getState(id);
+        return assetJSON && assetJSON.length > 0;
+    }
 }
