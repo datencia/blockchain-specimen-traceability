@@ -38,10 +38,16 @@ export class SpecimensService {
         const contract: Contract = await this.getContract();
         const resultBytes = await contract.evaluateTransaction('GetAllSpecimens');
 
-        const result: Specimen[] = this.decodeResponse(resultBytes);
-        this.logger.debug(`Found ${result.length} specimens in the ledger`);
+        let specimenList: Specimen[] = this.decodeResponse(resultBytes);
+        this.logger.debug(`Found ${specimenList.length} specimens in the ledger`);
+        specimenList = specimenList.map((specimen) => {
+            return {
+                ...specimen,
+                collectionTime: dayjs(specimen.collectionTime).toISOString(),
+            };
+        });
 
-        return result;
+        return specimenList;
     }
 
     async getSpecimenById(id: string): Promise<Specimen> {
@@ -51,10 +57,14 @@ export class SpecimensService {
         try {
             const resultBytes = await contract.evaluateTransaction('ReadSpecimen', id);
 
-            const result: Specimen = this.decodeResponse(resultBytes);
+            let specimen: Specimen = this.decodeResponse(resultBytes);
             this.logger.debug(`Specimen with id ${id} found`);
+            specimen = {
+                ...specimen,
+                collectionTime: dayjs(specimen.collectionTime).toISOString(),
+            };
 
-            return result;
+            return specimen;
         } catch (err) {
             this.logger.error(`Failed getting the specimen with id ${id}, error=${err.message}`);
         }

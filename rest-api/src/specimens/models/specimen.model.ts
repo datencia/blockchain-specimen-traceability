@@ -14,7 +14,7 @@ export interface Specimen {
     name: string;
     label: string;
     method: CollectionMethod;
-    collectionTime: number;
+    collectionTime: string;
     collector: string;
     patientId: string;
     status: SpecimenStatus;
