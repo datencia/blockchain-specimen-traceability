@@ -1,14 +1,23 @@
+export type SpecimenStatus =
+    | 'EXTRACTED'
+    | 'ORDERED'
+    | 'ACCESSIONING'
+    | 'GROSSING'
+    | 'PROCESSING'
+    | 'DIAGNOSTIC'
+    | 'INFORMED';
+
 export interface Specimen {
     id: string;
     name: string;
     label: string;
     method: string;
-    collectionDateTime: number;
+    collectionTime: number;
     collector: string;
     patientId: string;
-    status: string;
+    status: SpecimenStatus;
     owner: string;
     orderNumber?: string;
     caseNumber?: string;
-    receivedDateTime?: number;
+    receivedTime?: number;
 }

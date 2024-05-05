@@ -1,6 +1,5 @@
 import { Object, Property } from 'fabric-contract-api';
 
-export type DocType = 'specimen';
 export type SpecimenStatus =
     | 'EXTRACTED'
     | 'ORDERED'
@@ -13,9 +12,6 @@ export type SpecimenStatus =
 @Object()
 export class Specimen {
     @Property()
-    public docType?: DocType;
-
-    @Property()
     public id: string;
 
     // The specimen name
@@ -26,13 +22,13 @@ export class Specimen {
     @Property()
     public label: string;
 
-    // Collection method (e.g. biopsy, cytology, aspiration, etc.)
+    // Method used to perform collection (e.g. biopsy, cytology, aspiration, etc.)
     @Property()
     public method: string;
 
     // Collection time
     @Property()
-    public collectionDateTime: number;
+    public collectionTime: number;
 
     // Who collected the specimen
     @Property()
@@ -60,5 +56,5 @@ export class Specimen {
 
     // The time when specimen is received by the laboratory
     @Property()
-    public receivedDateTime?: number;
+    public receivedTime?: number;
 }

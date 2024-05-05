@@ -10,13 +10,13 @@ export class SpecimenContract extends Contract {
     // InitLedger initializes the wold state with a set of specimens.
     @Transaction()
     public async InitLedger(ctx: Context): Promise<void> {
-        const assets: Specimen[] = [
+        const specimens: Specimen[] = [
             {
                 id: '281e986c-da5f-4c80-94eb-c4545de1e1e1',
                 name: 'Abdomen',
                 label: 'B24 030-068-088 A',
-                method: 'Biopsia',
-                collectionDateTime: 1714673348000,
+                method: 'Biopsy',
+                collectionTime: 1714673348000,
                 collector: 'Practitioner/collector-1',
                 patientId: 'Patient/alice',
                 status: 'EXTRACTED',
@@ -24,21 +24,21 @@ export class SpecimenContract extends Contract {
             },
             {
                 id: '3c557bc5-87be-4d7c-86f5-e8ad820b4fa8',
-                name: 'Abdomen',
+                name: 'Skin of external ear',
                 label: 'B24 030-068-088 B',
-                method: 'Biopsia',
+                method: 'Biopsy',
                 collector: 'Practitioner/collector-1',
-                collectionDateTime: 1714673348000,
+                collectionTime: 1714673348000,
                 patientId: 'Patient/alice',
                 status: 'EXTRACTED',
                 owner: 'Practitioner/collector-1',
             },
             {
                 id: '8acffb0a-f569-4da2-be14-6b0f6c97dbaa',
-                name: 'Piel',
+                name: 'Skin',
                 label: 'B21 030-001-005 A',
-                method: 'Biopsia',
-                collectionDateTime: 1628840326000,
+                method: 'Biopsy',
+                collectionTime: 1628840326000,
                 collector: 'Practitioner/collector-2',
                 patientId: 'Patient/bob',
                 status: 'EXTRACTED',
@@ -46,21 +46,23 @@ export class SpecimenContract extends Contract {
             },
             {
                 id: 'da0cfac3-cc47-4640-b651-46271d187a7f',
-                name: 'Adenoides',
+                name: 'Adenoids',
                 label: 'B23 030-068-011 A',
-                method: 'Biopsia',
+                method: 'Biopsy',
                 collector: 'Practitioner/collector-3',
-                collectionDateTime: 1680507526000,
+                collectionTime: 1680507526000,
                 patientId: 'Patient/dave',
                 status: 'EXTRACTED',
                 owner: 'Practitioner/collector-3',
             },
         ];
 
-        for (const asset of assets) {
-            asset.docType = 'specimen';
-            await ctx.stub.putState(asset.id, Buffer.from(stringify(sortKeysRecursive(asset))));
-            console.info(`Specimen ${asset.id} initialized!`);
+        for (const specimen of specimens) {
+            await ctx.stub.putState(
+                specimen.id,
+                Buffer.from(stringify(sortKeysRecursive(specimen))),
+            );
+            console.info(`Specimen ${specimen.id} initialized!`);
         }
     }
 
