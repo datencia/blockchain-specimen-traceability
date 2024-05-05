@@ -1,8 +1,9 @@
-import { Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 import { SpecimensService } from './specimens.service';
 import { Specimen } from './specimen.model';
+import { CreateSpecimenDto } from './dto/create-specimen.dto';
 
 @Controller('specimens')
 export class SpecimensController {
@@ -15,6 +16,12 @@ export class SpecimensController {
     @UseGuards(AuthGuard('basic'))
     async getAllSpecimens(): Promise<Specimen[]> {
         return this.specimensService.getAllSpecimens();
+    }
+
+    @Post()
+    @UseGuards(AuthGuard('basic'))
+    async create(@Body() specimenData: CreateSpecimenDto): Promise<Specimen> {
+        return this.specimensService.createSpecimen(specimenData);
     }
 
     @Get(':id')
