@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
-import { SpecimensService } from './specimens.service';
+import { SpecimensService } from './services/specimens.service';
 import { SpecimensController } from './specimens.controller';
 
 @Module({

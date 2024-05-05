@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
-import { SpecimensService } from './specimens.service';
-import { Specimen } from './specimen.model';
-import { CreateSpecimenDto } from './dto/create-specimen.dto';
+import { SpecimensService } from './services/specimens.service';
+import { Specimen } from './models/specimen.model';
+import { CreateSpecimenDto } from './dtos/create-specimen.dto';
 
 @Controller('specimens')
 export class SpecimensController {

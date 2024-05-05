@@ -6,7 +6,7 @@ import { CommonModule } from '@common';
 import { RequestIdMiddleware } from '@common/middlewares';
 import { UsersModule } from '@users';
 import { AuthModule } from '@auth';
-import { SpecimensModule } from './specimens/specimens.module';
+import { SpecimensModule } from '@specimens';
 
 @Module({
     imports: [

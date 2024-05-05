@@ -1,13 +1,6 @@
 import { IsDateString, IsEnum, IsNotEmpty, MaxLength } from 'class-validator';
 
-export enum CollectionMethod {
-    Biopsy = 'Biopsy',
-    Autopsy = 'Autopsy',
-    Cytology = 'Cytology',
-    Aspiration = 'Aspiration',
-    Puncture = 'Puncture',
-    Scraping = 'Scraping',
-}
+import { CollectionMethod } from '../models/collection-method.enum';
 
 export class CreateSpecimenDto {
     // The specimen name

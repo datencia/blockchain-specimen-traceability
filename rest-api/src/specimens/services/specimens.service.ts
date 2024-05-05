@@ -6,8 +6,8 @@ import { randomUUID } from 'crypto';
 import * as dayjs from 'dayjs';
 
 import { GatewayClientService } from '@common/fabric';
-import { Specimen } from './specimen.model';
-import { CreateSpecimenDto } from './dto/create-specimen.dto';
+import { Specimen } from '../models/specimen.model';
+import { CreateSpecimenDto } from '../dtos/create-specimen.dto';
 
 @Injectable()
 export class SpecimensService {

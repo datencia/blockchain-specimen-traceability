@@ -1,3 +1,5 @@
+import { CollectionMethod } from './collection-method.enum';
+
 export type SpecimenStatus =
     | 'EXTRACTED'
     | 'ORDERED'
@@ -11,7 +13,7 @@ export interface Specimen {
     id: string;
     name: string;
     label: string;
-    method: string;
+    method: CollectionMethod;
     collectionTime: number;
     collector: string;
     patientId: string;

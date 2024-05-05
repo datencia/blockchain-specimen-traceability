@@ -19,7 +19,9 @@
       "@config": ["./src/config/index"],
       "@config/*": ["./src/config/*"],
       "@users": ["./src/users/index"],
-      "@users/*": ["./src/users/*"]
+      "@users/*": ["./src/users/*"],
+      "@specimens": ["./src/specimens/index"],
+      "@specimens/*": ["./src/specimens/*"]
     },
     "skipLibCheck": true,
     "strictNullChecks": false,
