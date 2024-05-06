@@ -98,6 +98,18 @@ export class SpecimensService {
         return specimen;
     }
 
+    async deleteSpecimenById(id: string): Promise<void> {
+        this.logger.log('Submit Transaction: DeleteSpecimen, deletes the given specimen');
+        const contract: Contract = await this.getContract();
+        try {
+            await contract.submitTransaction('DeleteSpecimen', id);
+            this.logger.debug(`Specimen with id ${id} deleted successfully`);
+        } catch (err) {
+            this.logger.error(`Failed deleting the specimen with id ${id}, error=${err.message}`);
+            throw err;
+        }
+    }
+
     private async getContract(): Promise<Contract> {
         const gateway: Gateway = await this.fabricService.getGateway();
         const network: Network = gateway.getNetwork(this.CHANNEL_NAME);

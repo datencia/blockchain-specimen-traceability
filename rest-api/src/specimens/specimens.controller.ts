@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 import { SpecimensService } from './services/specimens.service';
@@ -28,6 +28,12 @@ export class SpecimensController {
     @UseGuards(AuthGuard('basic'))
     async getSpecimenById(@Param('id') id: string): Promise<Specimen> {
         return this.specimensService.getSpecimenById(id);
+    }
+
+    @Delete(':id')
+    @UseGuards(AuthGuard('basic'))
+    async deleteSpecimenById(@Param('id') id: string): Promise<void> {
+        await this.specimensService.deleteSpecimenById(id);
     }
 
     @Post('init-ledger')
