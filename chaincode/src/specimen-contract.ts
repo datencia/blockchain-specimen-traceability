@@ -133,7 +133,7 @@ export class SpecimenContract extends Contract {
         return specimen;
     }
 
-    // SpecimenExists returns true when specimen with given ID exists in world state.
+    // SpecimenExists returns true when specimen with given id exists in world state.
     @Transaction(false)
     @Returns('boolean')
     public async SpecimenExists(ctx: Context, id: string): Promise<boolean> {
@@ -149,5 +149,19 @@ export class SpecimenContract extends Contract {
             throw new Error(`The specimen ${id} does not exist`);
         }
         await ctx.stub.deleteState(id);
+    }
+
+    // TransferSpecimen updates the owner field of a specimen with given id in the world state, and returns the old owner.
+    @Transaction()
+    public async TransferSpecimen(ctx: Context, id: string, newOwner: string): Promise<string> {
+        const specimenString = await this.ReadSpecimen(ctx, id);
+        const specimen: Specimen = JSON.parse(specimenString);
+
+        const oldOwner = specimen.owner;
+        specimen.owner = newOwner;
+
+        await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(specimen))));
+
+        return JSON.stringify({ oldOwner, newOwner });
     }
 }
