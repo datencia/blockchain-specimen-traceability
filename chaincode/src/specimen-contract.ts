@@ -140,4 +140,14 @@ export class SpecimenContract extends Contract {
         const assetJSON = await ctx.stub.getState(id);
         return assetJSON && assetJSON.length > 0;
     }
+
+    // DeleteSpecimen deletes a given specimen from the world state.
+    @Transaction()
+    public async DeleteSpecimen(ctx: Context, id: string): Promise<void> {
+        const exists = await this.SpecimenExists(ctx, id);
+        if (!exists) {
+            throw new Error(`The specimen ${id} does not exist`);
+        }
+        await ctx.stub.deleteState(id);
+    }
 }
