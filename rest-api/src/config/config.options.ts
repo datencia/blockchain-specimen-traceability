@@ -13,6 +13,7 @@ const validationSchema = Joi.object({
     MSP_ID: Joi.string().required(),
     CRYPTO_PATH: Joi.string().required(),
     SECRET: Joi.string().default('s3cr3t'),
+    SWAGGER_ENABLED: Joi.boolean().default(false),
 });
 
 const validationOptions = {

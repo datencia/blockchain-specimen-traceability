@@ -1,48 +1,57 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { IsDateString, IsEnum, IsNotEmpty, MaxLength } from 'class-validator';
+import { CollectionMethod } from './collection-method.enum';
+import { SpecimenStatus } from './specimen-status.type';
 
-import { CollectionMethod } from '../models/collection-method.enum';
+export class Specimen {
+    @ApiProperty({
+        example: '8acffb0a-f569-4da2-be14-6b0f6c97dbaa',
+        description: 'The specimen identifier in the ledger',
+    })
+    id: string;
 
-export class CreateSpecimenDto {
     @ApiProperty({ example: 'Skin', description: 'The specimen name' })
-    @IsNotEmpty()
-    @MaxLength(255)
     name: string;
 
     @ApiProperty({ example: 'B24-00017-A', description: 'Identifier assigned by the collector' })
-    @IsNotEmpty()
-    @MaxLength(255)
     label: string;
 
     @ApiProperty({
         example: 'Biopsy',
         description: 'Method used to perform collection (e.g. biopsy, cytology, aspiration, etc.)',
     })
-    @IsNotEmpty()
-    @IsEnum(CollectionMethod)
     method: CollectionMethod;
 
     @ApiProperty({ example: '2024-05-15T14:30:50.000Z', description: 'Collection date & time' })
-    @IsNotEmpty()
-    @IsDateString()
     collectionTime: string;
 
     @ApiProperty({ example: 'Practitioner/1', description: 'Who collected the specimen' })
-    @IsNotEmpty()
-    @MaxLength(255)
     collector: string;
 
     @ApiProperty({ example: 'Patient/1', description: 'The patient the specimen comes from' })
-    @IsNotEmpty()
-    @MaxLength(255)
     patientId: string;
+
+    @ApiProperty({ example: 'EXTRACTED', description: 'The current specimen status' })
+    status: SpecimenStatus;
 
     @ApiProperty({
         example: 'Practitioner/1',
         description: 'The person who currently holds the specimen',
     })
-    @IsNotEmpty()
-    @MaxLength(255)
     owner: string;
+
+    @ApiProperty({
+        example: '384858',
+        description: 'The order number associated with the specimen',
+    })
+    orderNumber?: string;
+
+    @ApiProperty({ example: '24B0000710', description: 'Identifier assigned by the laboratory' })
+    caseNumber?: string;
+
+    @ApiProperty({
+        example: '2024-05-16T12:25:00.000Z',
+        description: 'The time when specimen is received by the laboratory',
+    })
+    receivedTime?: number;
 }
