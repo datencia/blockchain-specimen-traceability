@@ -8,6 +8,7 @@ import * as dayjs from 'dayjs';
 import { GatewayClientService } from '@common/fabric';
 import { Specimen } from '../models/specimen.entity';
 import { CreateSpecimenDto } from '../dtos/create-specimen.dto';
+import { Transaction } from '../models/transaction.entity';
 
 @Injectable()
 export class SpecimensService {
@@ -67,6 +68,45 @@ export class SpecimensService {
             return specimen;
         } catch (err) {
             this.logger.error(`Failed getting the specimen with id ${id}, error=${err.message}`);
+        }
+    }
+
+    async getSpecimenHistoryById(id: string): Promise<Transaction<Specimen>[]> {
+        this.logger.log(
+            'Evaluate Transaction: ReadSpecimenHistory, returns the specimen transaction history',
+        );
+
+        const contract: Contract = await this.getContract();
+        try {
+            const resultBytes = await contract.evaluateTransaction('ReadSpecimenHistory', id);
+
+            const transactions: Transaction<Specimen>[] = this.decodeResponse(resultBytes);
+            this.logger.debug(
+                `Found ${transactions.length} transactions for the specimen with id ${id}`,
+            );
+
+            return transactions
+                .map((transaction) => ({
+                    ...transaction,
+                    timestamp: dayjs(transaction.timestamp).toISOString(),
+                }))
+                .map((transaction) => {
+                    if (!transaction.data) {
+                        return transaction;
+                    }
+                    return {
+                        ...transaction,
+                        data: {
+                            ...transaction.data,
+                            collectionTime: dayjs(transaction.data.collectionTime).toISOString(),
+                        },
+                    };
+                });
+        } catch (err) {
+            this.logger.error(
+                `Failed getting the transaction history for the specimen with id ${id}, error=${err.message}`,
+            );
+            throw err;
         }
     }
 

@@ -12,6 +12,7 @@ import {
 import { SpecimensService } from './services/specimens.service';
 import { Specimen } from './models/specimen.entity';
 import { CreateSpecimenDto } from './dtos/create-specimen.dto';
+import { Transaction } from './models/transaction.entity';
 
 @ApiTags('Specimens')
 @Controller('specimens')
@@ -54,6 +55,23 @@ export class SpecimensController {
     })
     async getSpecimenById(@Param('id') id: string): Promise<Specimen> {
         return await this.specimensService.getSpecimenById(id);
+    }
+
+    @Get(':id/history')
+    @UseGuards(AuthGuard('basic'))
+    @ApiOperation({ summary: 'Get the specimen transaction history from the ledger by id' })
+    @ApiParam({
+        name: 'id',
+        type: String,
+        description: 'Id of the specimen to return the transaction history',
+    })
+    @ApiOkResponse({
+        description: 'Return the requested specimen transaction history',
+        type: Transaction<Specimen>,
+        isArray: true,
+    })
+    async getSpecimenHistoryById(@Param('id') id: string): Promise<Transaction<Specimen>[]> {
+        return await this.specimensService.getSpecimenHistoryById(id);
     }
 
     @Delete(':id')
