@@ -98,6 +98,39 @@ export class SpecimenContract extends Contract {
         return assetJSON.toString();
     }
 
+    // ReadSpecimenHistory returns the specimen transaction history stored in the world state with given id.
+    @Transaction(false)
+    public async ReadSpecimenHistory(ctx: Context, id: string): Promise<string> {
+        const allResults = [];
+
+        const iterator = await ctx.stub.getHistoryForKey(id);
+        let result = await iterator.next();
+        while (!result.done) {
+            const { value, timestamp, txId, isDelete } = result.value;
+
+            const strValue = Buffer.from(value.toString()).toString('utf8');
+            // @ts-expect-error Error accessing to the seconds property as a 'Long' type when running in the blockchain
+            const milliseconds = (timestamp.seconds + timestamp.nanos / 1000000000) * 1000;
+
+            let record: { isDelete: boolean; timestamp: number; txId: string; data?: unknown } = {
+                txId,
+                isDelete,
+                timestamp: milliseconds,
+            };
+            if (!isDelete) {
+                record = {
+                    ...record,
+                    data: JSON.parse(strValue),
+                };
+            }
+            allResults.push(record);
+
+            result = await iterator.next();
+        }
+
+        return JSON.stringify(allResults);
+    }
+
     // RegisterExtractedSpecimen issues a new specimen to the world state with given details.
     @Transaction()
     public async RegisterExtractedSpecimen(
