@@ -8,6 +8,7 @@ import * as dayjs from 'dayjs';
 import { GatewayClientService } from '@common/fabric';
 import { Specimen } from '../models/specimen.entity';
 import { CreateSpecimenDto } from '../dtos/create-specimen.dto';
+import { TransferOwnershipDto } from '../dtos/transfer-ownership.dto';
 import { Transaction } from '../models/transaction.entity';
 
 @Injectable()
@@ -150,6 +151,30 @@ export class SpecimensService {
             this.logger.debug(`Specimen with id ${id} deleted successfully`);
         } catch (err) {
             this.logger.error(`Failed deleting the specimen with id ${id}, error=${err.message}`);
+            throw err;
+        }
+    }
+
+    async transferSpecimen(transferData: TransferOwnershipDto): Promise<string> {
+        this.logger.log('Submit Transaction: TransferSpecimen, transfer a specimen between users');
+
+        const contract: Contract = await this.getContract();
+        const { specimenId, senderId, recipientId } = transferData;
+        try {
+            const resultBytes = await contract.submitTransaction(
+                'TransferSpecimen',
+                specimenId,
+                recipientId,
+            );
+            const oldOwner = this.decodeResponse(resultBytes);
+            this.logger.log(
+                `Specimen with id ${specimenId} transferred from user ${senderId} to ${recipientId}`,
+            );
+            return oldOwner;
+        } catch (err) {
+            this.logger.error(
+                `Failed transferring the specimen with id ${specimenId} from user ${senderId} to ${recipientId}, error=${err.message}`,
+            );
             throw err;
         }
     }

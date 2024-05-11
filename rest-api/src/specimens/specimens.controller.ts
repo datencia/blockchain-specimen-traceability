@@ -12,6 +12,7 @@ import {
 import { SpecimensService } from './services/specimens.service';
 import { Specimen } from './models/specimen.entity';
 import { CreateSpecimenDto } from './dtos/create-specimen.dto';
+import { TransferOwnershipDto } from './dtos/transfer-ownership.dto';
 import { Transaction } from './models/transaction.entity';
 
 @ApiTags('Specimens')
@@ -82,6 +83,18 @@ export class SpecimensController {
     @ApiNoContentResponse({ description: 'The specimen has been deleted successfully' })
     async deleteSpecimenById(@Param('id') id: string): Promise<void> {
         await this.specimensService.deleteSpecimenById(id);
+    }
+
+    @Post('transfer')
+    @HttpCode(200)
+    @UseGuards(AuthGuard('basic'))
+    @ApiOperation({ summary: 'Transfer a specimen between users' })
+    @ApiOkResponse({
+        description: 'Return the specimen updated',
+        type: Specimen,
+    })
+    async transferSpecimen(@Body() payload: TransferOwnershipDto): Promise<string> {
+        return await this.specimensService.transferSpecimen(payload);
     }
 
     @Post('init-ledger')
