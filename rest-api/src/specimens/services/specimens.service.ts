@@ -132,8 +132,12 @@ export class SpecimensService {
         );
         this.logger.debug('Transaction committed successfully');
 
-        const specimen: Specimen = this.decodeResponse(resultBytes);
+        let specimen: Specimen = this.decodeResponse(resultBytes);
         this.logger.log(`Specimen with id ${id} created, status: ${specimen.status}`);
+        specimen = {
+            ...specimen,
+            collectionTime: dayjs(specimen.collectionTime).toISOString(),
+        };
 
         return specimen;
     }
