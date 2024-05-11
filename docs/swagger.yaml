@@ -1,0 +1,286 @@
+openapi: 3.0.0
+paths:
+  /api/specimens:
+    get:
+      operationId: SpecimensController_getAllSpecimens
+      summary: Get all the current specimens stored in the ledger
+      parameters: []
+      responses:
+        "200":
+          description: Return all specimens stored in the ledger
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Specimen"
+      tags:
+        - Specimens
+    post:
+      operationId: SpecimensController_create
+      summary: Create a new extracted specimen in the ledger
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSpecimenDto"
+      responses:
+        "201":
+          description: The specimen has been created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Specimen"
+      tags:
+        - Specimens
+  /api/specimens/{id}:
+    get:
+      operationId: SpecimensController_getSpecimenById
+      summary: Get a specimen from the ledger by id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: Id of the specimen to return
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Return the requested specimen
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Specimen"
+      tags:
+        - Specimens
+    delete:
+      operationId: SpecimensController_deleteSpecimenById
+      summary: Delete the given specimen from the ledger
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: Specimen id to delete
+          schema:
+            type: string
+      responses:
+        "204":
+          description: The specimen has been deleted successfully
+      tags:
+        - Specimens
+  /api/specimens/{id}/history:
+    get:
+      operationId: SpecimensController_getSpecimenHistoryById
+      summary: Get the specimen transaction history from the ledger by id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: Id of the specimen to return the transaction history
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Return the requested specimen transaction history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Transaction"
+      tags:
+        - Specimens
+  /api/specimens/transfer:
+    post:
+      operationId: SpecimensController_transferSpecimen
+      summary: Transfer a specimen between users
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransferOwnershipDto"
+      responses:
+        "200":
+          description: Return the specimen updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Specimen"
+      tags:
+        - Specimens
+  /api/specimens/init-ledger:
+    post:
+      operationId: SpecimensController_initLedger
+      summary: Create the initial set of specimens in the ledger
+      parameters: []
+      responses:
+        "204":
+          description: Ledger populated with an initial set of specimens
+      tags:
+        - Specimens
+info:
+  title: Specimens API
+  description: The specimens blockchain-based API
+  version: "1.0"
+  contact: {}
+tags:
+  - name: Specimens
+    description: >-
+      Operations to interact with the chaincode for specimen traceability
+      management in Hyperledger Fabric.
+servers: []
+components:
+  schemas:
+    Specimen:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 8acffb0a-f569-4da2-be14-6b0f6c97dbaa
+          description: The specimen identifier in the ledger
+        name:
+          type: string
+          example: Skin
+          description: The specimen name
+        label:
+          type: string
+          example: B24-00017-A
+          description: Identifier assigned by the collector
+        method:
+          type: string
+          example: Biopsy
+          description: >-
+            Method used to perform collection (e.g. biopsy, cytology,
+            aspiration, etc.)
+        collectionTime:
+          type: string
+          example: "2024-05-15T14:30:50.000Z"
+          description: Collection date & time
+        collector:
+          type: string
+          example: Practitioner/1
+          description: Who collected the specimen
+        patientId:
+          type: string
+          example: Patient/1
+          description: The patient the specimen comes from
+        status:
+          type: string
+          example: EXTRACTED
+          description: The current specimen status
+        owner:
+          type: string
+          example: Practitioner/1
+          description: The person who currently holds the specimen
+        orderNumber:
+          type: string
+          example: "384858"
+          description: The order number associated with the specimen
+        caseNumber:
+          type: string
+          example: 24B0000710
+          description: Identifier assigned by the laboratory
+        receivedTime:
+          type: number
+          example: "2024-05-16T12:25:00.000Z"
+          description: The time when specimen is received by the laboratory
+      required:
+        - id
+        - name
+        - label
+        - method
+        - collectionTime
+        - collector
+        - patientId
+        - status
+        - owner
+        - orderNumber
+        - caseNumber
+        - receivedTime
+    CreateSpecimenDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Skin
+          description: The specimen name
+        label:
+          type: string
+          example: B24-00017-A
+          description: Identifier assigned by the collector
+        method:
+          type: string
+          example: Biopsy
+          description: >-
+            Method used to perform collection (e.g. biopsy, cytology,
+            aspiration, etc.)
+        collectionTime:
+          type: string
+          example: "2024-05-15T14:30:50.000Z"
+          description: Collection date & time
+        collector:
+          type: string
+          example: Practitioner/1
+          description: Who collected the specimen
+        patientId:
+          type: string
+          example: Patient/1
+          description: The patient the specimen comes from
+        owner:
+          type: string
+          example: Practitioner/1
+          description: The person who currently holds the specimen
+      required:
+        - name
+        - label
+        - method
+        - collectionTime
+        - collector
+        - patientId
+        - owner
+    Transaction:
+      type: object
+      properties:
+        txId:
+          type: string
+          example: 8acffb0a-f569-4da2-be14-6b0f6c97dbaa
+          description: The transaction ID of the event
+        isDelete:
+          type: boolean
+          example: false
+          description: Indicates whether the key has been deleted
+        timestamp:
+          type: string
+          example: "2024-05-11T08:29:33.734Z"
+          description: The time at which the modification occurred
+        data:
+          type: object
+          description: The value associated with the key at the time of the modification
+      required:
+        - txId
+        - isDelete
+        - timestamp
+        - data
+    TransferOwnershipDto:
+      type: object
+      properties:
+        specimenId:
+          type: string
+          example: 8acffb0a-f569-4da2-be14-6b0f6c97dbaa
+          description: The specimen identifier in the ledger being transferred
+        senderId:
+          type: string
+          example: Practitioner/1
+          description: Current owner of the specimen initiating the transfer
+        recipientId:
+          type: string
+          example: Practitioner/2
+          description: Identifier of the user receiving the specimen
+      required:
+        - specimenId
+        - senderId
+        - recipientId
