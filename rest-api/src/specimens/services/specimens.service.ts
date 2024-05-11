@@ -127,8 +127,8 @@ export class SpecimensService {
             method,
             dayjs(collectionTime).valueOf().toString(),
             collector,
-            patientId,
             owner,
+            patientId,
         );
         this.logger.debug('Transaction committed successfully');
 
