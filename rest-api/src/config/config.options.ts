@@ -14,6 +14,8 @@ const validationSchema = Joi.object({
     CRYPTO_PATH: Joi.string().required(),
     SECRET: Joi.string().default('s3cr3t'),
     SWAGGER_ENABLED: Joi.boolean().default(false),
+    CHANNEL_NAME: Joi.string().required(),
+    CHAINCODE_NAME: Joi.string().required(),
 });
 
 const validationOptions = {
