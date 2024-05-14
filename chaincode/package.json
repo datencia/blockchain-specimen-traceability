@@ -1,6 +1,6 @@
 {
   "name": "specimen-transfer",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Specimen Transfer contract implemented in Typescript",
   "author": "David Atencia",
   "license": "MIT",
