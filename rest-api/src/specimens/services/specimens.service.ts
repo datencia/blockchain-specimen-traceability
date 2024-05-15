@@ -28,8 +28,13 @@ export class SpecimensService {
         );
 
         const contract: Contract = await this.getContract();
-        await contract.submitTransaction('InitLedger');
-        this.logger.debug('InitLedger transaction committed successfully');
+
+        try {
+            await contract.submitTransaction('InitLedger');
+            this.logger.debug('InitLedger transaction committed successfully');
+        } finally {
+            await this.closeGatewayConnection();
+        }
     }
 
     async getAllSpecimens(): Promise<Specimen[]> {
@@ -38,24 +43,30 @@ export class SpecimensService {
         );
 
         const contract: Contract = await this.getContract();
-        const resultBytes = await contract.evaluateTransaction('GetAllSpecimens');
 
-        let specimenList: Specimen[] = this.decodeResponse(resultBytes);
-        this.logger.debug(`Found ${specimenList.length} specimens in the ledger`);
-        specimenList = specimenList.map((specimen) => {
-            return {
-                ...specimen,
-                collectionTime: dayjs(specimen.collectionTime).toISOString(),
-            };
-        });
+        try {
+            const resultBytes = await contract.evaluateTransaction('GetAllSpecimens');
 
-        return specimenList;
+            let specimenList: Specimen[] = this.decodeResponse(resultBytes);
+            this.logger.debug(`Found ${specimenList.length} specimens in the ledger`);
+            specimenList = specimenList.map((specimen) => {
+                return {
+                    ...specimen,
+                    collectionTime: dayjs(specimen.collectionTime).toISOString(),
+                };
+            });
+
+            return specimenList;
+        } finally {
+            await this.closeGatewayConnection();
+        }
     }
 
     async getSpecimenById(id: string): Promise<Specimen> {
         this.logger.log('Evaluate Transaction: ReadSpecimen, returns the specimen attributes');
 
         const contract: Contract = await this.getContract();
+
         try {
             const resultBytes = await contract.evaluateTransaction('ReadSpecimen', id);
 
@@ -69,6 +80,8 @@ export class SpecimensService {
             return specimen;
         } catch (err) {
             this.logger.error(`Failed getting the specimen with id ${id}, error=${err.message}`);
+        } finally {
+            await this.closeGatewayConnection();
         }
     }
 
@@ -78,6 +91,7 @@ export class SpecimensService {
         );
 
         const contract: Contract = await this.getContract();
+
         try {
             const resultBytes = await contract.evaluateTransaction('ReadSpecimenHistory', id);
 
@@ -108,6 +122,8 @@ export class SpecimensService {
                 `Failed getting the transaction history for the specimen with id ${id}, error=${err.message}`,
             );
             throw err;
+        } finally {
+            await this.closeGatewayConnection();
         }
     }
 
@@ -117,41 +133,51 @@ export class SpecimensService {
         );
 
         const contract: Contract = await this.getContract();
-        const id = randomUUID();
-        const { name, label, method, collectionTime, collector, patientId, owner } = specimenData;
 
-        const resultBytes = await contract.submitTransaction(
-            'RegisterExtractedSpecimen',
-            id,
-            name,
-            label,
-            method,
-            dayjs(collectionTime).valueOf().toString(),
-            collector,
-            owner,
-            patientId,
-        );
-        this.logger.debug('Transaction committed successfully');
+        try {
+            const id = randomUUID();
+            const { name, label, method, collectionTime, collector, patientId, owner } =
+                specimenData;
 
-        let specimen: Specimen = this.decodeResponse(resultBytes);
-        this.logger.log(`Specimen with id ${id} created, status: ${specimen.status}`);
-        specimen = {
-            ...specimen,
-            collectionTime: dayjs(specimen.collectionTime).toISOString(),
-        };
+            const resultBytes = await contract.submitTransaction(
+                'RegisterExtractedSpecimen',
+                id,
+                name,
+                label,
+                method,
+                dayjs(collectionTime).valueOf().toString(),
+                collector,
+                owner,
+                patientId,
+            );
+            this.logger.debug('Transaction committed successfully');
 
-        return specimen;
+            let specimen: Specimen = this.decodeResponse(resultBytes);
+            this.logger.log(`Specimen with id ${id} created, status: ${specimen.status}`);
+            specimen = {
+                ...specimen,
+                collectionTime: dayjs(specimen.collectionTime).toISOString(),
+            };
+
+            return specimen;
+        } finally {
+            await this.closeGatewayConnection();
+        }
     }
 
     async deleteSpecimenById(id: string): Promise<void> {
         this.logger.log('Submit Transaction: DeleteSpecimen, deletes the given specimen');
+
         const contract: Contract = await this.getContract();
+
         try {
             await contract.submitTransaction('DeleteSpecimen', id);
             this.logger.debug(`Specimen with id ${id} deleted successfully`);
         } catch (err) {
             this.logger.error(`Failed deleting the specimen with id ${id}, error=${err.message}`);
             throw err;
+        } finally {
+            await this.closeGatewayConnection();
         }
     }
 
@@ -160,6 +186,7 @@ export class SpecimensService {
 
         const contract: Contract = await this.getContract();
         const { specimenId, senderId, recipientId } = transferData;
+
         try {
             const resultBytes = await contract.submitTransaction(
                 'TransferSpecimen',
@@ -176,6 +203,8 @@ export class SpecimensService {
                 `Failed transferring the specimen with id ${specimenId} from user ${senderId} to ${recipientId}, error=${err.message}`,
             );
             throw err;
+        } finally {
+            await this.closeGatewayConnection();
         }
     }
 
@@ -189,5 +218,11 @@ export class SpecimensService {
         const utf8Decoder = new TextDecoder();
         const resultJson = utf8Decoder.decode(resultBytes);
         return JSON.parse(resultJson);
+    }
+
+    private async closeGatewayConnection(): Promise<void> {
+        this.logger.verbose(`Closing Fabric gateway connection...`);
+        const gateway: Gateway = await this.fabricService.getGateway();
+        gateway.close();
     }
 }
