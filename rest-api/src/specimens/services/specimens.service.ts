@@ -32,6 +32,11 @@ export class SpecimensService {
         try {
             await contract.submitTransaction('InitLedger');
             this.logger.debug('InitLedger transaction committed successfully');
+        } catch (err) {
+            this.logger.error(
+                `Failed creating the initial set of specimens in the ledger, error=${err.message}`,
+            );
+            throw err;
         } finally {
             await this.closeGatewayConnection();
         }
@@ -57,6 +62,9 @@ export class SpecimensService {
             });
 
             return specimenList;
+        } catch (err) {
+            this.logger.error(`Failed getting all specimens in the ledger, error=${err.message}`);
+            throw err;
         } finally {
             await this.closeGatewayConnection();
         }
@@ -80,6 +88,7 @@ export class SpecimensService {
             return specimen;
         } catch (err) {
             this.logger.error(`Failed getting the specimen with id ${id}, error=${err.message}`);
+            throw err;
         } finally {
             await this.closeGatewayConnection();
         }
@@ -160,6 +169,9 @@ export class SpecimensService {
             };
 
             return specimen;
+        } catch (err) {
+            this.logger.error(`Failed creating the new specimen, error=${err.message}`);
+            throw err;
         } finally {
             await this.closeGatewayConnection();
         }
