@@ -4,17 +4,21 @@ import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import helmet from 'helmet';
+import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create(AppModule, { bufferLogs: true });
 
+    const logger = app.get(Logger);
     const configService: ConfigService = app.get(ConfigService);
 
+    app.useLogger(logger);
     app.setGlobalPrefix('api');
     app.use(helmet());
     app.enableCors();
+    app.useGlobalInterceptors(new LoggerErrorInterceptor());
     app.useGlobalPipes(
         new ValidationPipe({
             whitelist: true,
@@ -38,6 +42,9 @@ async function bootstrap() {
         SwaggerModule.setup('explorer', app, document);
     }
 
-    await app.listen(configService.get<number>('PORT'));
+    const port = configService.get<number>('PORT');
+    await app.listen(port);
+
+    logger.log(`Application listening on port ${port}`);
 }
 bootstrap();

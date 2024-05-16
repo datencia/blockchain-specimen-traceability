@@ -16,6 +16,10 @@ const validationSchema = Joi.object({
     SWAGGER_ENABLED: Joi.boolean().default(false),
     CHANNEL_NAME: Joi.string().required(),
     CHAINCODE_NAME: Joi.string().required(),
+    LOGGING_LEVEL: Joi.string()
+        .valid('fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent')
+        .default('info'),
+    LOGGING_TRANSPORTS: Joi.string().default('file'),
 });
 
 const validationOptions = {
