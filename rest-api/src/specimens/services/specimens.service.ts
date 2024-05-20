@@ -193,7 +193,7 @@ export class SpecimensService {
         }
     }
 
-    async transferSpecimen(transferData: TransferOwnershipDto): Promise<string> {
+    async transferSpecimen(transferData: TransferOwnershipDto): Promise<Specimen> {
         this.logger.log('Submit Transaction: TransferSpecimen, transfer a specimen between users');
 
         const contract: Contract = await this.getContract();
@@ -203,13 +203,19 @@ export class SpecimensService {
             const resultBytes = await contract.submitTransaction(
                 'TransferSpecimen',
                 specimenId,
+                senderId,
                 recipientId,
             );
-            const oldOwner = this.decodeResponse(resultBytes);
+            let specimen = this.decodeResponse(resultBytes);
             this.logger.log(
                 `Specimen with id ${specimenId} transferred from user ${senderId} to ${recipientId}`,
             );
-            return oldOwner;
+            specimen = {
+                ...specimen,
+                collectionTime: dayjs(specimen.collectionTime).toISOString(),
+            };
+
+            return specimen;
         } catch (err) {
             this.logger.error(
                 `Failed transferring the specimen with id ${specimenId} from user ${senderId} to ${recipientId}, error=${err.message}`,

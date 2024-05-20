@@ -93,7 +93,7 @@ export class SpecimensController {
         description: 'Return the specimen updated',
         type: Specimen,
     })
-    async transferSpecimen(@Body() payload: TransferOwnershipDto): Promise<string> {
+    async transferSpecimen(@Body() payload: TransferOwnershipDto): Promise<Specimen> {
         return await this.specimensService.transferSpecimen(payload);
     }
 
