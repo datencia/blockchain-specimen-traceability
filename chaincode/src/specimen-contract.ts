@@ -190,17 +190,33 @@ export class SpecimenContract extends Contract {
         await ctx.stub.deleteState(id);
     }
 
-    // TransferSpecimen updates the owner field of a specimen with given id in the world state, and returns the old owner.
+    /**
+     * Transfer a specimen between users
+     *
+     * @param {Context} ctx - The transaction context
+     * @param {string} id - The specimen id to be transferred
+     * @param {string} currentOwner - Current owner of the specimen
+     * @param {string} newOwner - New owner of the specimen
+     *
+     * @return {Promise<Specimen>} - The specimen updated
+     */
     @Transaction()
-    public async TransferSpecimen(ctx: Context, id: string, newOwner: string): Promise<string> {
+    public async TransferSpecimen(
+        ctx: Context,
+        id: string,
+        currentOwner: string,
+        newOwner: string,
+    ): Promise<Specimen> {
         const specimenString = await this.ReadSpecimen(ctx, id);
         const specimen: Specimen = JSON.parse(specimenString);
 
-        const oldOwner = specimen.owner;
+        if (specimen.owner !== currentOwner) {
+            throw new Error(`Specimen ${id} is not owned by ${currentOwner}`);
+        }
         specimen.owner = newOwner;
 
         await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(specimen))));
 
-        return JSON.stringify({ oldOwner, newOwner });
+        return specimen;
     }
 }
