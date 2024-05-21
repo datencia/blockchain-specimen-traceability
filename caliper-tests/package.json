@@ -1,0 +1,16 @@
+{
+  "name": "caliper-tests",
+  "version": "0.1.0",
+  "description": "Hyperledger Caliper performance tests",
+  "author": "David Atencia",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.10.3",
+    "@hyperledger/caliper-cli": "^0.6.0",
+    "@hyperledger/fabric-gateway": "^1.5.0"
+  }
+}
