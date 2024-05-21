@@ -7,7 +7,13 @@ import { Specimen } from './specimen';
 
 @Info({ title: 'SpecimenContract', description: 'Smart contract for specimen tracking' })
 export class SpecimenContract extends Contract {
-    // InitLedger initializes the wold state with a set of specimens.
+    /**
+     * Initializes the world state with a set of specimens
+     *
+     * @param {Context} ctx - The transaction context
+     *
+     * @return {Promise<void>}
+     */
     @Transaction()
     public async InitLedger(ctx: Context): Promise<void> {
         const specimens: Specimen[] = [
@@ -20,7 +26,7 @@ export class SpecimenContract extends Contract {
                 collector: 'Practitioner/collector-1',
                 patientId: 'Patient/alice',
                 status: 'EXTRACTED',
-                owner: 'Practitioner/collector-1',
+                owner: 'User1@org1.example.com',
             },
             {
                 id: '3c557bc5-87be-4d7c-86f5-e8ad820b4fa8',
@@ -31,7 +37,7 @@ export class SpecimenContract extends Contract {
                 collectionTime: 1714673348000,
                 patientId: 'Patient/alice',
                 status: 'EXTRACTED',
-                owner: 'Practitioner/collector-1',
+                owner: 'User1@org1.example.com',
             },
             {
                 id: '8acffb0a-f569-4da2-be14-6b0f6c97dbaa',
@@ -42,7 +48,7 @@ export class SpecimenContract extends Contract {
                 collector: 'Practitioner/collector-2',
                 patientId: 'Patient/bob',
                 status: 'EXTRACTED',
-                owner: 'Practitioner/collector-2',
+                owner: 'User1@org1.example.com',
             },
             {
                 id: 'da0cfac3-cc47-4640-b651-46271d187a7f',
@@ -53,7 +59,7 @@ export class SpecimenContract extends Contract {
                 collectionTime: 1680507526000,
                 patientId: 'Patient/dave',
                 status: 'EXTRACTED',
-                owner: 'Practitioner/collector-3',
+                owner: 'User1@org1.example.com',
             },
         ];
 
