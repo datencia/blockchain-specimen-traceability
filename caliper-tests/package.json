@@ -6,7 +6,9 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified. Run 'npm run benchmark:read' or 'npm run benchmark:write'\" && exit 1",
+    "benchmark:read": "caliper launch manager --caliper-workspace . --caliper-benchconfig benchmarks/config-read-test.yaml --caliper-networkconfig networks/test-network.yaml --caliper-report-path report-read-benchmark.html",
+    "benchmark:write": "caliper launch manager --caliper-workspace . --caliper-benchconfig benchmarks/config-write-test.yaml --caliper-networkconfig networks/test-network.yaml --caliper-report-path report-write-benchmark.html"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.10.3",

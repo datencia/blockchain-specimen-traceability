@@ -1,0 +1,55 @@
+test:
+    name: specimen-write-benchmark
+    description: Measuring the TPS of the network, the transaction latency, and network scalability
+    workers:
+        number: 10
+    rounds:
+        - label: low-load
+          contractId: basic
+          txNumber: 2000
+          rateControl:
+              type: fixed-rate
+              opts:
+                  tps: 50
+          workload:
+              module: benchmarks/workloads/create-specimen.js
+              arguments:
+                  contractId: basic
+                  contractVersion: 0.1.0
+        - label: moderate-load
+          contractId: basic
+          txNumber: 4000
+          rateControl:
+              type: fixed-rate
+              opts:
+                  tps: 100
+          workload:
+              module: benchmarks/workloads/create-specimen.js
+              arguments:
+                  contractId: basic
+                  contractVersion: 0.1.0
+        - label: high-load
+          contractId: basic
+          txNumber: 6000
+          rateControl:
+              type: fixed-rate
+              opts:
+                  tps: 300
+          workload:
+              module: benchmarks/workloads/create-specimen.js
+              arguments:
+                  contractId: basic
+                  contractVersion: 0.1.0
+
+monitors:
+    resource:
+        - module: docker
+          options:
+              interval: 5
+              containers:
+                  - all
+              charting:
+                  bar:
+                      metrics: [Memory(avg), CPU%(avg), Traffic In, Traffic Out]
+                  polar:
+                      metrics: [Memory(avg), CPU%(avg), Traffic In, Traffic Out]
