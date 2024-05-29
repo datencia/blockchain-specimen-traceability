@@ -72,7 +72,13 @@ export class SpecimenContract extends Contract {
         }
     }
 
-    // GetAllSpecimens returns all specimens found in the world state.
+    /**
+     * Return all specimens found in the world state
+     *
+     * @param {Context} ctx - The transaction context
+     *
+     * @return {Promise<string>}
+     */
     @Transaction(false)
     @Returns('string')
     public async GetAllSpecimens(ctx: Context): Promise<string> {
@@ -94,7 +100,14 @@ export class SpecimenContract extends Contract {
         return JSON.stringify(allResults);
     }
 
-    // ReadSpecimen returns the specimen stored in the world state with given id.
+    /**
+     * Return the specimen stored in the world state with given id
+     *
+     * @param {Context} ctx - The transaction context
+     * @param {string} id - The specimen id to retrieve
+     *
+     * @return {Promise<string>}
+     */
     @Transaction(false)
     public async ReadSpecimen(ctx: Context, id: string): Promise<string> {
         const assetJSON = await ctx.stub.getState(id);
@@ -104,7 +117,14 @@ export class SpecimenContract extends Contract {
         return assetJSON.toString();
     }
 
-    // ReadSpecimenHistory returns the specimen transaction history stored in the world state with given id.
+    /**
+     * Return the specimen transaction history stored in the world state with given id
+     *
+     * @param {Context} ctx - The transaction context
+     * @param {string} id - The specimen id to get the transaction history
+     *
+     * @return {Promise<string>}
+     */
     @Transaction(false)
     public async ReadSpecimenHistory(ctx: Context, id: string): Promise<string> {
         const allResults = [];
@@ -137,7 +157,21 @@ export class SpecimenContract extends Contract {
         return JSON.stringify(allResults);
     }
 
-    // RegisterExtractedSpecimen issues a new specimen to the world state with given details.
+    /**
+     * Issue a new specimen to the world state with given details
+     *
+     * @param {Context} ctx - The transaction context
+     * @param {string} id - The specimen id
+     * @param {string} name - The specimen name
+     * @param {string} label - Identifier assigned by the collector
+     * @param {string} method - Method used to perform collection
+     * @param {number} collectionTime - Collection time
+     * @param {string} collector - Who collected the specimen
+     * @param {string} owner - The person who currently holds the specimen
+     * @param {string} patientId - The patient id the specimen comes from
+     *
+     * @return {Promise<Specimen>}
+     */
     @Transaction()
     public async RegisterExtractedSpecimen(
         ctx: Context,
@@ -172,7 +206,14 @@ export class SpecimenContract extends Contract {
         return specimen;
     }
 
-    // SpecimenExists returns true when specimen with given id exists in world state.
+    /**
+     * Return true when specimen with given id exists in world state
+     *
+     * @param {Context} ctx - The transaction context
+     * @param {string} id - The specimen id to check
+     *
+     * @return {Promise<boolean>}
+     */
     @Transaction(false)
     @Returns('boolean')
     public async SpecimenExists(ctx: Context, id: string): Promise<boolean> {
@@ -180,7 +221,14 @@ export class SpecimenContract extends Contract {
         return assetJSON && assetJSON.length > 0;
     }
 
-    // DeleteSpecimen deletes a given specimen from the world state.
+    /**
+     *  Delete a given specimen from the world state
+     *
+     * @param {Context} ctx - The transaction context
+     * @param {string} id - The specimen id to be deleted
+     *
+     * @return {Promise<void>}
+     */
     @Transaction()
     public async DeleteSpecimen(ctx: Context, id: string): Promise<void> {
         const exists = await this.SpecimenExists(ctx, id);
