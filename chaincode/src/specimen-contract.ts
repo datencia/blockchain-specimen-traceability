@@ -246,6 +246,53 @@ export class SpecimenContract extends Contract {
     }
 
     /**
+     * Establishes a specimen as received by the laboratory, assigning it a case number for study
+     *
+     * @param {Context} ctx - The transaction context
+     * @param {string} id - The specimen id
+     * @param {string} caseNumber - The case number assigned to the specimen by the laboratory
+     * @param {number} receivedTime - The effective time when specimen is received by the laboratory
+     *
+     * @return {Promise<Specimen>}
+     */
+    @Transaction()
+    public async RegisterLabCase(
+        ctx: Context,
+        id: string,
+        caseNumber: string,
+        receivedTime: number,
+    ): Promise<Specimen> {
+        if (!id) {
+            throw new Error(`Invalid or missing specimen id`);
+        }
+        if (!caseNumber) {
+            throw new Error(`Invalid or missing required parameters, caseNumber=${caseNumber}`);
+        }
+        if (!receivedTime) {
+            throw new Error(`Invalid or missing required parameters, receivedTime=${receivedTime}`);
+        }
+
+        let specimen: Specimen = await this.ReadSpecimen(ctx, id);
+
+        if (specimen.status !== 'ORDERED') {
+            throw new Error(
+                `The specimen ${id} has not been ordered or it is currently under study`,
+            );
+        }
+
+        const status = 'ACCESSIONING';
+        specimen = {
+            ...specimen,
+            caseNumber,
+            receivedTime,
+            status,
+        };
+        await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(specimen))));
+
+        return specimen;
+    }
+
+    /**
      * Return true when specimen with given id exists in world state
      *
      * @param {Context} ctx - The transaction context
