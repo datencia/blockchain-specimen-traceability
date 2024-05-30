@@ -106,15 +106,15 @@ export class SpecimenContract extends Contract {
      * @param {Context} ctx - The transaction context
      * @param {string} id - The specimen id to retrieve
      *
-     * @return {Promise<string>}
+     * @return {Promise<Specimen>}
      */
     @Transaction(false)
-    public async ReadSpecimen(ctx: Context, id: string): Promise<string> {
+    public async ReadSpecimen(ctx: Context, id: string): Promise<Specimen> {
         const assetJSON = await ctx.stub.getState(id);
         if (!assetJSON || assetJSON.length === 0) {
             throw new Error(`The specimen ${id} does not exist`);
         }
-        return assetJSON.toString();
+        return JSON.parse(assetJSON.toString());
     }
 
     /**
@@ -255,8 +255,7 @@ export class SpecimenContract extends Contract {
         currentOwner: string,
         newOwner: string,
     ): Promise<Specimen> {
-        const specimenString = await this.ReadSpecimen(ctx, id);
-        const specimen: Specimen = JSON.parse(specimenString);
+        const specimen: Specimen = await this.ReadSpecimen(ctx, id);
 
         if (specimen.owner !== currentOwner) {
             throw new Error(`Specimen ${id} is not owned by ${currentOwner}`);
