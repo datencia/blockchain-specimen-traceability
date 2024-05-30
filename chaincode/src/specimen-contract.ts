@@ -207,6 +207,45 @@ export class SpecimenContract extends Contract {
     }
 
     /**
+     * Issue a study order to the laboratory for the given specimen
+     *
+     * @param {Context} ctx - The transaction context
+     * @param {string} id - The specimen id
+     * @param {string} orderNumber - The order number associated with the specimen
+     *
+     * @return {Promise<Specimen>}
+     */
+    @Transaction()
+    public async IssueOrderToTheLab(
+        ctx: Context,
+        id: string,
+        orderNumber: string,
+    ): Promise<Specimen> {
+        if (!id) {
+            throw new Error(`Invalid or missing specimen id`);
+        }
+        if (!orderNumber) {
+            throw new Error(`Invalid or missing required parameters, orderNumber=${orderNumber}`);
+        }
+
+        let specimen: Specimen = await this.ReadSpecimen(ctx, id);
+
+        if (specimen.status !== 'EXTRACTED') {
+            throw new Error(`The specimen ${id} is currently ordered or under study.`);
+        }
+
+        const status = 'ORDERED';
+        specimen = {
+            ...specimen,
+            orderNumber,
+            status,
+        };
+        await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(specimen))));
+
+        return specimen;
+    }
+
+    /**
      * Return true when specimen with given id exists in world state
      *
      * @param {Context} ctx - The transaction context
