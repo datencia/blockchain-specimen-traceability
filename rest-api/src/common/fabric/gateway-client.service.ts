@@ -3,7 +3,15 @@ import { REQUEST } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 
 import { Request } from 'express';
-import { connect, Gateway, Identity, Signer, signers } from '@hyperledger/fabric-gateway';
+import {
+    connect,
+    Contract,
+    Gateway,
+    Identity,
+    Network,
+    Signer,
+    signers,
+} from '@hyperledger/fabric-gateway';
 import * as crypto from 'crypto';
 
 import { GrpcClientService } from '../grpc';
@@ -14,6 +22,8 @@ export class GatewayClientService {
     private readonly logger = new Logger(GatewayClientService.name);
     private readonly MSP_ID: string = this.configService.get<string>('MSP_ID');
     private readonly CRYPTO_PATH: string = this.configService.get<string>('CRYPTO_PATH');
+    private readonly CHANNEL_NAME = this.configService.get<string>('CHANNEL_NAME');
+    private readonly CHAINCODE_NAME = this.configService.get<string>('CHAINCODE_NAME');
 
     private _gateway: Gateway;
 
@@ -29,6 +39,18 @@ export class GatewayClientService {
         }
         await this.initFabricGateway(this.request.user as string);
         return this._gateway;
+    }
+
+    async getContract(): Promise<Contract> {
+        const gateway: Gateway = await this.getGateway();
+        const network: Network = gateway.getNetwork(this.CHANNEL_NAME);
+        return network.getContract(this.CHAINCODE_NAME);
+    }
+
+    async closeGatewayConnection(): Promise<void> {
+        this.logger.verbose(`Closing Fabric gateway connection...`);
+        const gateway: Gateway = await this.getGateway();
+        gateway.close();
     }
 
     private async initFabricGateway(username: string): Promise<void> {

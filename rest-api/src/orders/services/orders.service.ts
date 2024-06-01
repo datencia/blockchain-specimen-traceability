@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 
-import { Contract, Gateway, Network } from '@hyperledger/fabric-gateway';
+import { Contract } from '@hyperledger/fabric-gateway';
 
 import { GatewayClientService } from '@common/fabric';
 import { CreateOrderDto } from '../dtos/create-order.dto';
@@ -9,11 +8,9 @@ import { CreateOrderDto } from '../dtos/create-order.dto';
 @Injectable()
 export class OrdersService {
     private readonly logger = new Logger(OrdersService.name);
-    private readonly CHANNEL_NAME = this.configService.get<string>('CHANNEL_NAME');
-    private readonly CHAINCODE_NAME = this.configService.get<string>('CHAINCODE_NAME');
 
+    // prettier-ignore
     constructor(
-        private configService: ConfigService,
         private fabricService: GatewayClientService,
     ) {}
 
@@ -22,7 +19,7 @@ export class OrdersService {
             'Submit Transaction: IssueOrderToTheLab, create a laboratory order for a given specimen',
         );
 
-        const contract: Contract = await this.getContract();
+        const contract: Contract = await this.fabricService.getContract();
         const { specimenId, orderNumber } = orderData;
 
         try {
@@ -34,19 +31,7 @@ export class OrdersService {
             );
             throw err;
         } finally {
-            await this.closeGatewayConnection();
+            await this.fabricService.closeGatewayConnection();
         }
-    }
-
-    private async getContract(): Promise<Contract> {
-        const gateway: Gateway = await this.fabricService.getGateway();
-        const network: Network = gateway.getNetwork(this.CHANNEL_NAME);
-        return network.getContract(this.CHAINCODE_NAME);
-    }
-
-    private async closeGatewayConnection(): Promise<void> {
-        this.logger.verbose(`Closing Fabric gateway connection...`);
-        const gateway: Gateway = await this.fabricService.getGateway();
-        gateway.close();
     }
 }

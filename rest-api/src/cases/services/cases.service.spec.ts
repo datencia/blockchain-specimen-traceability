@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigService } from '@nestjs/config';
 
 import { CasesService } from './cases.service';
 import { GatewayClientService } from '@common/fabric';
@@ -14,16 +13,9 @@ describe('CasesService', () => {
         },
     };
 
-    const configServiceProvider = {
-        provide: ConfigService,
-        useValue: {
-            get: jest.fn(),
-        },
-    };
-
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [CasesService, configServiceProvider, gatewayServiceProvider],
+            providers: [CasesService, gatewayServiceProvider],
         }).compile();
 
         service = module.get<CasesService>(CasesService);

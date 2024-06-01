@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 
-import { Contract, Gateway, Network } from '@hyperledger/fabric-gateway';
+import { Contract } from '@hyperledger/fabric-gateway';
 import { randomUUID } from 'crypto';
 import * as dayjs from 'dayjs';
 
@@ -15,11 +14,9 @@ import { Transaction } from '../models/transaction.entity';
 @Injectable()
 export class SpecimensService {
     private readonly logger = new Logger(SpecimensService.name);
-    private readonly CHANNEL_NAME = this.configService.get<string>('CHANNEL_NAME');
-    private readonly CHAINCODE_NAME = this.configService.get<string>('CHAINCODE_NAME');
 
+    // prettier-ignore
     constructor(
-        private configService: ConfigService,
         private fabricService: GatewayClientService,
     ) {}
 
@@ -28,7 +25,7 @@ export class SpecimensService {
             'Submit Transaction: InitLedger, creates the initial set of specimens in the ledger',
         );
 
-        const contract: Contract = await this.getContract();
+        const contract: Contract = await this.fabricService.getContract();
 
         try {
             await contract.submitTransaction('InitLedger');
@@ -39,7 +36,7 @@ export class SpecimensService {
             );
             throw err;
         } finally {
-            await this.closeGatewayConnection();
+            await this.fabricService.closeGatewayConnection();
         }
     }
 
@@ -48,7 +45,7 @@ export class SpecimensService {
             'Evaluate Transaction: getAllSpecimens, returns all the current specimens in the ledger',
         );
 
-        const contract: Contract = await this.getContract();
+        const contract: Contract = await this.fabricService.getContract();
 
         try {
             const resultBytes = await contract.evaluateTransaction('GetAllSpecimens');
@@ -67,14 +64,14 @@ export class SpecimensService {
             this.logger.error(`Failed getting all specimens in the ledger, error=${err.message}`);
             throw err;
         } finally {
-            await this.closeGatewayConnection();
+            await this.fabricService.closeGatewayConnection();
         }
     }
 
     async getSpecimenById(id: string): Promise<Specimen> {
         this.logger.log('Evaluate Transaction: ReadSpecimen, returns the specimen attributes');
 
-        const contract: Contract = await this.getContract();
+        const contract: Contract = await this.fabricService.getContract();
 
         try {
             const resultBytes = await contract.evaluateTransaction('ReadSpecimen', id);
@@ -91,7 +88,7 @@ export class SpecimensService {
             this.logger.error(`Failed getting the specimen with id ${id}, error=${err.message}`);
             throw err;
         } finally {
-            await this.closeGatewayConnection();
+            await this.fabricService.closeGatewayConnection();
         }
     }
 
@@ -100,7 +97,7 @@ export class SpecimensService {
             'Evaluate Transaction: ReadSpecimenHistory, returns the specimen transaction history',
         );
 
-        const contract: Contract = await this.getContract();
+        const contract: Contract = await this.fabricService.getContract();
 
         try {
             const resultBytes = await contract.evaluateTransaction('ReadSpecimenHistory', id);
@@ -133,7 +130,7 @@ export class SpecimensService {
             );
             throw err;
         } finally {
-            await this.closeGatewayConnection();
+            await this.fabricService.closeGatewayConnection();
         }
     }
 
@@ -142,7 +139,7 @@ export class SpecimensService {
             'Submit Transaction: RegisterExtractedSpecimen, register a new extracted specimen',
         );
 
-        const contract: Contract = await this.getContract();
+        const contract: Contract = await this.fabricService.getContract();
 
         try {
             const id = randomUUID();
@@ -174,14 +171,14 @@ export class SpecimensService {
             this.logger.error(`Failed creating the new specimen, error=${err.message}`);
             throw err;
         } finally {
-            await this.closeGatewayConnection();
+            await this.fabricService.closeGatewayConnection();
         }
     }
 
     async deleteSpecimenById(id: string): Promise<void> {
         this.logger.log('Submit Transaction: DeleteSpecimen, deletes the given specimen');
 
-        const contract: Contract = await this.getContract();
+        const contract: Contract = await this.fabricService.getContract();
 
         try {
             await contract.submitTransaction('DeleteSpecimen', id);
@@ -190,14 +187,14 @@ export class SpecimensService {
             this.logger.error(`Failed deleting the specimen with id ${id}, error=${err.message}`);
             throw err;
         } finally {
-            await this.closeGatewayConnection();
+            await this.fabricService.closeGatewayConnection();
         }
     }
 
     async transferSpecimen(transferData: TransferOwnershipDto): Promise<Specimen> {
         this.logger.log('Submit Transaction: TransferSpecimen, transfer a specimen between users');
 
-        const contract: Contract = await this.getContract();
+        const contract: Contract = await this.fabricService.getContract();
         const { specimenId, senderId, recipientId } = transferData;
 
         try {
@@ -223,7 +220,7 @@ export class SpecimensService {
             );
             throw err;
         } finally {
-            await this.closeGatewayConnection();
+            await this.fabricService.closeGatewayConnection();
         }
     }
 
@@ -232,7 +229,7 @@ export class SpecimensService {
             'Submit Transaction: ChangeSpecimenStatus, update the status of a given specimen',
         );
 
-        const contract: Contract = await this.getContract();
+        const contract: Contract = await this.fabricService.getContract();
 
         try {
             const resultBytes = await contract.submitTransaction(
@@ -253,25 +250,13 @@ export class SpecimensService {
             this.logger.error(`Failed updating the specimen with id ${id}, error=${err.message}`);
             throw err;
         } finally {
-            await this.closeGatewayConnection();
+            await this.fabricService.closeGatewayConnection();
         }
-    }
-
-    private async getContract(): Promise<Contract> {
-        const gateway: Gateway = await this.fabricService.getGateway();
-        const network: Network = gateway.getNetwork(this.CHANNEL_NAME);
-        return network.getContract(this.CHAINCODE_NAME);
     }
 
     private decodeResponse(resultBytes: Uint8Array): any {
         const utf8Decoder = new TextDecoder();
         const resultJson = utf8Decoder.decode(resultBytes);
         return JSON.parse(resultJson);
-    }
-
-    private async closeGatewayConnection(): Promise<void> {
-        this.logger.verbose(`Closing Fabric gateway connection...`);
-        const gateway: Gateway = await this.fabricService.getGateway();
-        gateway.close();
     }
 }
