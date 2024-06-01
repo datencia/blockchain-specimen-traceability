@@ -53,5 +53,5 @@ export class Specimen {
         example: '2024-05-16T12:25:00.000Z',
         description: 'The time when specimen is received by the laboratory',
     })
-    receivedTime?: number;
+    receivedTime?: string;
 }

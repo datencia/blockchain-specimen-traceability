@@ -52,12 +52,7 @@ export class SpecimensService {
 
             let specimenList: Specimen[] = this.decodeResponse(resultBytes);
             this.logger.debug(`Found ${specimenList.length} specimens in the ledger`);
-            specimenList = specimenList.map((specimen) => {
-                return {
-                    ...specimen,
-                    collectionTime: dayjs(specimen.collectionTime).toISOString(),
-                };
-            });
+            specimenList = specimenList.map(this.mapRawSpecimenToSpecimenEntity);
 
             return specimenList;
         } catch (err) {
@@ -78,10 +73,7 @@ export class SpecimensService {
 
             let specimen: Specimen = this.decodeResponse(resultBytes);
             this.logger.debug(`Specimen with id ${id} found`);
-            specimen = {
-                ...specimen,
-                collectionTime: dayjs(specimen.collectionTime).toISOString(),
-            };
+            specimen = this.mapRawSpecimenToSpecimenEntity(specimen);
 
             return specimen;
         } catch (err) {
@@ -118,10 +110,7 @@ export class SpecimensService {
                     }
                     return {
                         ...transaction,
-                        data: {
-                            ...transaction.data,
-                            collectionTime: dayjs(transaction.data.collectionTime).toISOString(),
-                        },
+                        data: this.mapRawSpecimenToSpecimenEntity(transaction.data),
                     };
                 });
         } catch (err) {
@@ -161,10 +150,7 @@ export class SpecimensService {
 
             let specimen: Specimen = this.decodeResponse(resultBytes);
             this.logger.log(`Specimen with id ${id} created, status: ${specimen.status}`);
-            specimen = {
-                ...specimen,
-                collectionTime: dayjs(specimen.collectionTime).toISOString(),
-            };
+            specimen = this.mapRawSpecimenToSpecimenEntity(specimen);
 
             return specimen;
         } catch (err) {
@@ -208,10 +194,7 @@ export class SpecimensService {
             this.logger.log(
                 `Specimen with id ${specimenId} transferred from user ${senderId} to ${recipientId}`,
             );
-            specimen = {
-                ...specimen,
-                collectionTime: dayjs(specimen.collectionTime).toISOString(),
-            };
+            specimen = this.mapRawSpecimenToSpecimenEntity(specimen);
 
             return specimen;
         } catch (err) {
@@ -239,11 +222,7 @@ export class SpecimensService {
             );
             let specimen = this.decodeResponse(resultBytes);
             this.logger.log(`Specimen ${id} status updated to ${statusData.status}`);
-            specimen = {
-                ...specimen,
-                collectionTime: dayjs(specimen.collectionTime).toISOString(),
-                receivedTime: dayjs(specimen.receivedTime).toISOString(),
-            };
+            specimen = this.mapRawSpecimenToSpecimenEntity(specimen);
 
             return specimen;
         } catch (err) {
@@ -258,5 +237,21 @@ export class SpecimensService {
         const utf8Decoder = new TextDecoder();
         const resultJson = utf8Decoder.decode(resultBytes);
         return JSON.parse(resultJson);
+    }
+
+    private mapRawSpecimenToSpecimenEntity(rawSpecimen: any): Specimen {
+        let specimen: Specimen = {
+            ...rawSpecimen,
+            collectionTime: dayjs(rawSpecimen.collectionTime).toISOString(),
+        };
+
+        if (rawSpecimen.receivedTime) {
+            specimen = {
+                ...specimen,
+                receivedTime: dayjs(specimen.receivedTime).toISOString(),
+            };
+        }
+
+        return specimen;
     }
 }
