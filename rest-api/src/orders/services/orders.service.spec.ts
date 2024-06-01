@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 
-import { SpecimensService } from './specimens.service';
+import { OrdersService } from './orders.service';
 import { GatewayClientService } from '@common/fabric';
 
-describe('SpecimensService', () => {
-    let service: SpecimensService;
+describe('OrdersService', () => {
+    let service: OrdersService;
 
     const gatewayServiceProvider = {
         provide: GatewayClientService,
@@ -23,10 +23,10 @@ describe('SpecimensService', () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [SpecimensService, configServiceProvider, gatewayServiceProvider],
+            providers: [OrdersService, configServiceProvider, gatewayServiceProvider],
         }).compile();
 
-        service = module.get<SpecimensService>(SpecimensService);
+        service = module.get<OrdersService>(OrdersService);
     });
 
     it('should be defined', () => {

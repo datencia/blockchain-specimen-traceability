@@ -10,6 +10,7 @@ import { loggerOptionsFactory } from '@common/logger';
 import { UsersModule } from '@users';
 import { AuthModule } from '@auth';
 import { SpecimensModule } from '@specimens';
+import { OrdersModule } from '@orders';
 
 @Module({
     imports: [
@@ -23,6 +24,7 @@ import { SpecimensModule } from '@specimens';
         AuthModule,
         CommonModule,
         SpecimensModule,
+        OrdersModule,
     ],
 })
 export class AppModule implements NestModule {

@@ -21,7 +21,9 @@
       "@users": ["./src/users/index"],
       "@users/*": ["./src/users/*"],
       "@specimens": ["./src/specimens/index"],
-      "@specimens/*": ["./src/specimens/*"]
+      "@specimens/*": ["./src/specimens/*"],
+      "@orders": ["./src/orders/index"],
+      "@orders/*": ["./src/orders/*"]
     },
     "skipLibCheck": true,
     "strictNullChecks": false,
