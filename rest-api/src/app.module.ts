@@ -11,6 +11,7 @@ import { UsersModule } from '@users';
 import { AuthModule } from '@auth';
 import { SpecimensModule } from '@specimens';
 import { OrdersModule } from '@orders';
+import { CasesModule } from '@cases';
 
 @Module({
     imports: [
@@ -25,6 +26,7 @@ import { OrdersModule } from '@orders';
         CommonModule,
         SpecimensModule,
         OrdersModule,
+        CasesModule,
     ],
 })
 export class AppModule implements NestModule {

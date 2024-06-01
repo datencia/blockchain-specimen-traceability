@@ -23,7 +23,9 @@
       "@specimens": ["./src/specimens/index"],
       "@specimens/*": ["./src/specimens/*"],
       "@orders": ["./src/orders/index"],
-      "@orders/*": ["./src/orders/*"]
+      "@orders/*": ["./src/orders/*"],
+      "@cases": ["./src/cases/index"],
+      "@cases/*": ["./src/cases/*"]
     },
     "skipLibCheck": true,
     "strictNullChecks": false,
