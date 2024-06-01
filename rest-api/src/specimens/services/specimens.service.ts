@@ -9,6 +9,7 @@ import { GatewayClientService } from '@common/fabric';
 import { Specimen } from '../models/specimen.entity';
 import { CreateSpecimenDto } from '../dtos/create-specimen.dto';
 import { TransferOwnershipDto } from '../dtos/transfer-ownership.dto';
+import { UpdateStatusDto } from '../dtos/update-status.dto';
 import { Transaction } from '../models/transaction.entity';
 
 @Injectable()
@@ -220,6 +221,36 @@ export class SpecimensService {
             this.logger.error(
                 `Failed transferring the specimen with id ${specimenId} from user ${senderId} to ${recipientId}, error=${err.message}`,
             );
+            throw err;
+        } finally {
+            await this.closeGatewayConnection();
+        }
+    }
+
+    async updateSpecimenStatus(id: string, statusData: UpdateStatusDto): Promise<Specimen> {
+        this.logger.log(
+            'Submit Transaction: ChangeSpecimenStatus, update the status of a given specimen',
+        );
+
+        const contract: Contract = await this.getContract();
+
+        try {
+            const resultBytes = await contract.submitTransaction(
+                'ChangeSpecimenStatus',
+                id,
+                statusData.status,
+            );
+            let specimen = this.decodeResponse(resultBytes);
+            this.logger.log(`Specimen ${id} status updated to ${statusData.status}`);
+            specimen = {
+                ...specimen,
+                collectionTime: dayjs(specimen.collectionTime).toISOString(),
+                receivedTime: dayjs(specimen.receivedTime).toISOString(),
+            };
+
+            return specimen;
+        } catch (err) {
+            this.logger.error(`Failed updating the specimen with id ${id}, error=${err.message}`);
             throw err;
         } finally {
             await this.closeGatewayConnection();

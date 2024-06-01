@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, UseGuards } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpCode,
+    Param,
+    Post,
+    Put,
+    UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
     ApiCreatedResponse,
@@ -13,6 +23,7 @@ import { SpecimensService } from './services/specimens.service';
 import { Specimen } from './models/specimen.entity';
 import { CreateSpecimenDto } from './dtos/create-specimen.dto';
 import { TransferOwnershipDto } from './dtos/transfer-ownership.dto';
+import { UpdateStatusDto } from './dtos/update-status.dto';
 import { Transaction } from './models/transaction.entity';
 
 @ApiTags('Specimens')
@@ -95,6 +106,21 @@ export class SpecimensController {
     })
     async transferSpecimen(@Body() payload: TransferOwnershipDto): Promise<Specimen> {
         return await this.specimensService.transferSpecimen(payload);
+    }
+
+    @Put(':id/status')
+    @HttpCode(200)
+    @UseGuards(AuthGuard('basic'))
+    @ApiOperation({ summary: 'Update the status of a given specimen' })
+    @ApiOkResponse({
+        description: 'Return the specimen updated',
+        type: Specimen,
+    })
+    async updateSpecimenStatus(
+        @Param('id') id: string,
+        @Body() payload: UpdateStatusDto,
+    ): Promise<Specimen> {
+        return await this.specimensService.updateSpecimenStatus(id, payload);
     }
 
     @Post('init-ledger')

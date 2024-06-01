@@ -1,8 +1,9 @@
-export type SpecimenStatus =
-    | 'EXTRACTED'
-    | 'ORDERED'
-    | 'ACCESSIONING'
-    | 'GROSSING'
-    | 'PROCESSING'
-    | 'DIAGNOSTIC'
-    | 'INFORMED';
+export enum SpecimenStatus {
+    Extracted = 'EXTRACTED',
+    Ordered = 'ORDERED',
+    Accessioning = 'ACCESSIONING',
+    Grossing = 'GROSSING',
+    Processing = 'PROCESSING',
+    Diagnostic = 'DIAGNOSTIC',
+    Informed = 'INFORMED',
+}
