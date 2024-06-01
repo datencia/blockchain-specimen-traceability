@@ -3,10 +3,20 @@ import { Context, Contract, Info, Returns, Transaction } from 'fabric-contract-a
 import stringify from 'json-stringify-deterministic';
 import sortKeysRecursive from 'sort-keys-recursive';
 
-import { Specimen } from './specimen';
+import { Specimen, SpecimenStatus } from './specimen';
 
 @Info({ title: 'SpecimenContract', description: 'Smart contract for specimen tracking' })
 export class SpecimenContract extends Contract {
+    private transitions: { [key in SpecimenStatus]: SpecimenStatus[] } = {
+        EXTRACTED: ['ORDERED'],
+        ORDERED: ['ACCESSIONING'],
+        ACCESSIONING: ['GROSSING'],
+        GROSSING: ['PROCESSING'],
+        PROCESSING: ['DIAGNOSTIC'],
+        DIAGNOSTIC: ['INFORMED'],
+        INFORMED: [],
+    };
+
     /**
      * Initializes the world state with a set of specimens
      *
@@ -351,5 +361,38 @@ export class SpecimenContract extends Contract {
         await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(specimen))));
 
         return specimen;
+    }
+
+    /**
+     * Change the status of a given specimen
+     *
+     * @param {Context} ctx - The transaction context
+     * @param {string} id - The specimen id
+     * @param {SpecimenStatus} status - The new status for the specimen
+     *
+     * @return {Promise<Specimen>} - The specimen updated
+     */
+    @Transaction()
+    public async ChangeSpecimenStatus(
+        ctx: Context,
+        id: string,
+        status: SpecimenStatus,
+    ): Promise<Specimen> {
+        const specimen: Specimen = await this.ReadSpecimen(ctx, id);
+
+        if (!this.canTransition(specimen, status)) {
+            throw new Error(
+                `The status for the specimen ${id} cannot transition from ${specimen.status} to ${status}`,
+            );
+        }
+        specimen.status = status;
+
+        await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(specimen))));
+
+        return specimen;
+    }
+
+    private canTransition(specimen: Specimen, newState: SpecimenStatus): boolean {
+        return this.transitions[specimen.status]?.includes(newState) ?? false;
     }
 }
