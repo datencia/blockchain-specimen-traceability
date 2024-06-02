@@ -15,6 +15,7 @@
     "format": "prettier --write \"src/**/*.ts\""
   },
   "dependencies": {
+    "dayjs": "^1.11.11",
     "fabric-contract-api": "^2.5.4",
     "fabric-shim": "^2.5.4",
     "json-stringify-deterministic": "^1.0.12",

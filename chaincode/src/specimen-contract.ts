@@ -2,12 +2,13 @@ import { Context, Contract, Info, Returns, Transaction } from 'fabric-contract-a
 
 import stringify from 'json-stringify-deterministic';
 import sortKeysRecursive from 'sort-keys-recursive';
+import dayjs from 'dayjs';
 
 import { Specimen, SpecimenStatus } from './specimen';
 
 @Info({ title: 'SpecimenContract', description: 'Smart contract for specimen tracking' })
 export class SpecimenContract extends Contract {
-    private transitions: { [key in SpecimenStatus]: SpecimenStatus[] } = {
+    private readonly transitions: { [key in SpecimenStatus]: SpecimenStatus[] } = {
         EXTRACTED: ['ORDERED'],
         ORDERED: ['ACCESSIONING'],
         ACCESSIONING: ['GROSSING'],
@@ -194,10 +195,7 @@ export class SpecimenContract extends Contract {
         owner: string,
         patientId: string,
     ): Promise<Specimen> {
-        const exists = await this.SpecimenExists(ctx, id);
-        if (exists) {
-            throw new Error(`The specimen ${id} already exists`);
-        }
+        console.info(`Creating specimen ${name} with id ${id}`);
 
         const status = 'EXTRACTED';
         const specimen: Specimen = {
@@ -211,9 +209,46 @@ export class SpecimenContract extends Contract {
             collectionTime,
             owner,
         };
+        this.validateSpecimenData(specimen);
+
+        const exists = await this.SpecimenExists(ctx, id);
+        if (exists) {
+            throw new Error(`The specimen ${id} already exists`);
+        }
+
         await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(specimen))));
+        console.log(`Specimen ${id} created, specimen = ${JSON.stringify(specimen)}`);
 
         return specimen;
+    }
+
+    private validateSpecimenData(specimen: Specimen) {
+        const message = 'Invalid or missing required parameter';
+
+        if (!specimen.id || specimen.id.trim().length === 0) {
+            throw new Error(`${message}, id=${specimen.id}`);
+        }
+        if (!specimen.name || specimen.name.trim().length === 0) {
+            throw new Error(`${message}, name=${specimen.name}`);
+        }
+        if (!specimen.label || specimen.label.trim().length === 0) {
+            throw new Error(`${message}, label=${specimen.label}`);
+        }
+        if (!specimen.method || specimen.method.trim().length === 0) {
+            throw new Error(`${message}, method=${specimen.method}`);
+        }
+        if (!specimen.collectionTime || !dayjs(specimen.collectionTime).isValid()) {
+            throw new Error(`${message}, collectionTime=${specimen.collectionTime}`);
+        }
+        if (!specimen.collector || specimen.collector.trim().length === 0) {
+            throw new Error(`${message}, collector=${specimen.collector}`);
+        }
+        if (!specimen.owner || specimen.owner.trim().length === 0) {
+            throw new Error(`${message}, owner=${specimen.owner}`);
+        }
+        if (!specimen.patientId || specimen.patientId.trim().length === 0) {
+            throw new Error(`${message}, patientId=${specimen.patientId}`);
+        }
     }
 
     /**
