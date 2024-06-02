@@ -461,6 +461,8 @@ export class SpecimenContract extends Contract {
     ): Promise<Specimen> {
         console.info(`Changing specimen ${id} status to ${status}`);
 
+        this.validateStatusChangeData(id, status);
+
         const specimen: Specimen = await this.ReadSpecimen(ctx, id);
 
         if (!this.canTransition(specimen, status)) {
@@ -475,6 +477,22 @@ export class SpecimenContract extends Contract {
         console.log(`Specimen ${id} status is now ${status}`);
 
         return specimen;
+    }
+
+    private validateStatusChangeData(id: string, status: SpecimenStatus): void {
+        const message = 'Invalid or missing required parameter';
+
+        if (!id || id.trim().length === 0) {
+            throw new Error(`${message}, id=${id}`);
+        }
+        if (!status || status.trim().length === 0) {
+            throw new Error(`${message}, status=${status}`);
+        }
+        if (['ORDERED', 'ACCESSIONING'].includes(status)) {
+            throw new Error(
+                `Cannot change the current status to ${status} directly without providing additional info.`,
+            );
+        }
     }
 
     private canTransition(specimen: Specimen, newState: SpecimenStatus): boolean {
