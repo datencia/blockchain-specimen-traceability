@@ -27,6 +27,8 @@ export class SpecimenContract extends Contract {
      */
     @Transaction()
     public async InitLedger(ctx: Context): Promise<void> {
+        console.info(`Initializing the world state with a set of specimens`);
+
         const specimens: Specimen[] = [
             {
                 id: '281e986c-da5f-4c80-94eb-c4545de1e1e1',
@@ -79,7 +81,7 @@ export class SpecimenContract extends Contract {
                 specimen.id,
                 Buffer.from(stringify(sortKeysRecursive(specimen))),
             );
-            console.info(`Specimen ${specimen.id} initialized!`);
+            console.log(`Specimen ${specimen.id} initialized!`);
         }
     }
 
@@ -93,6 +95,8 @@ export class SpecimenContract extends Contract {
     @Transaction(false)
     @Returns('string')
     public async GetAllSpecimens(ctx: Context): Promise<string> {
+        console.info(`Getting all specimens stored in the world state`);
+
         const allResults = [];
         const iterator = await ctx.stub.getStateByRange('', '');
         let result = await iterator.next();
@@ -108,6 +112,8 @@ export class SpecimenContract extends Contract {
             allResults.push(record);
             result = await iterator.next();
         }
+        console.log(`Found ${allResults.length} specimens stored in the world state`);
+
         return JSON.stringify(allResults);
     }
 
@@ -121,11 +127,17 @@ export class SpecimenContract extends Contract {
      */
     @Transaction(false)
     public async ReadSpecimen(ctx: Context, id: string): Promise<Specimen> {
+        console.info(`Getting specimen ${id} stored in the world state`);
+
         const assetJSON = await ctx.stub.getState(id);
         if (!assetJSON || assetJSON.length === 0) {
             throw new Error(`The specimen ${id} does not exist`);
         }
-        return JSON.parse(assetJSON.toString());
+
+        const specimen: Specimen = JSON.parse(assetJSON.toString());
+        console.log(`Specimen ${id} found, specimen = ${JSON.stringify(specimen)}`);
+
+        return specimen;
     }
 
     /**
@@ -138,6 +150,8 @@ export class SpecimenContract extends Contract {
      */
     @Transaction(false)
     public async ReadSpecimenHistory(ctx: Context, id: string): Promise<string> {
+        console.info(`Getting specimen ${id} transaction history`);
+
         const allResults = [];
 
         const iterator = await ctx.stub.getHistoryForKey(id);
@@ -164,6 +178,7 @@ export class SpecimenContract extends Contract {
 
             result = await iterator.next();
         }
+        console.log(`Found ${allResults.length} transactions for specimen ${id}`);
 
         return JSON.stringify(allResults);
     }
@@ -266,28 +281,37 @@ export class SpecimenContract extends Contract {
         id: string,
         orderNumber: string,
     ): Promise<Specimen> {
-        if (!id) {
-            throw new Error(`Invalid or missing specimen id`);
-        }
-        if (!orderNumber) {
-            throw new Error(`Invalid or missing required parameters, orderNumber=${orderNumber}`);
-        }
+        console.info(`Issuing study order ${orderNumber} to the lab for the specimen ${id}`);
 
+        this.validateOrderData(id, orderNumber);
+
+        const status = 'ORDERED';
         let specimen: Specimen = await this.ReadSpecimen(ctx, id);
 
-        if (specimen.status !== 'EXTRACTED') {
+        if (!this.canTransition(specimen, status)) {
             throw new Error(`The specimen ${id} is currently ordered or under study.`);
         }
 
-        const status = 'ORDERED';
         specimen = {
             ...specimen,
             orderNumber,
             status,
         };
         await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(specimen))));
+        console.log(`Order ${orderNumber} issued to the lab for specimen ${id}`);
 
         return specimen;
+    }
+
+    private validateOrderData(id: string, orderNumber: string): void {
+        const message = 'Invalid or missing required parameter';
+
+        if (!id || id.trim().length === 0) {
+            throw new Error(`${message}, id=${id}`);
+        }
+        if (!orderNumber || orderNumber.trim().length === 0) {
+            throw new Error(`${message}, orderNumber=${orderNumber}`);
+        }
     }
 
     /**
@@ -307,25 +331,19 @@ export class SpecimenContract extends Contract {
         caseNumber: string,
         receivedTime: number,
     ): Promise<Specimen> {
-        if (!id) {
-            throw new Error(`Invalid or missing specimen id`);
-        }
-        if (!caseNumber) {
-            throw new Error(`Invalid or missing required parameters, caseNumber=${caseNumber}`);
-        }
-        if (!receivedTime) {
-            throw new Error(`Invalid or missing required parameters, receivedTime=${receivedTime}`);
-        }
+        console.info(`Creating lab case ${caseNumber} for the specimen ${id}`);
 
+        this.validateCaseData(id, caseNumber, receivedTime);
+
+        const status = 'ACCESSIONING';
         let specimen: Specimen = await this.ReadSpecimen(ctx, id);
 
-        if (specimen.status !== 'ORDERED') {
+        if (!this.canTransition(specimen, status)) {
             throw new Error(
                 `The specimen ${id} has not been ordered or it is currently under study`,
             );
         }
 
-        const status = 'ACCESSIONING';
         specimen = {
             ...specimen,
             caseNumber,
@@ -333,8 +351,23 @@ export class SpecimenContract extends Contract {
             status,
         };
         await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(specimen))));
+        console.log(`Lab case ${caseNumber} created for specimen ${id}`);
 
         return specimen;
+    }
+
+    private validateCaseData(id: string, caseNumber: string, receivedTime: number): void {
+        const message = 'Invalid or missing required parameter';
+
+        if (!id || id.trim().length === 0) {
+            throw new Error(`${message}, id=${id}`);
+        }
+        if (!caseNumber || caseNumber.trim().length === 0) {
+            throw new Error(`${message}, caseNumber=${caseNumber}`);
+        }
+        if (!receivedTime || !dayjs(receivedTime).isValid()) {
+            throw new Error(`${message}, receivedTime=${receivedTime}`);
+        }
     }
 
     /**
@@ -348,8 +381,13 @@ export class SpecimenContract extends Contract {
     @Transaction(false)
     @Returns('boolean')
     public async SpecimenExists(ctx: Context, id: string): Promise<boolean> {
+        console.log(`Checking existence of specimen with id ${id}`);
+
         const assetJSON = await ctx.stub.getState(id);
-        return assetJSON && assetJSON.length > 0;
+        const found = assetJSON && assetJSON.length > 0;
+        console.log(`Specimen ${id} ${found ? 'found' : 'not found'}`);
+
+        return found;
     }
 
     /**
@@ -362,11 +400,15 @@ export class SpecimenContract extends Contract {
      */
     @Transaction()
     public async DeleteSpecimen(ctx: Context, id: string): Promise<void> {
+        console.info(`Deleting specimen ${id}`);
+
         const exists = await this.SpecimenExists(ctx, id);
         if (!exists) {
             throw new Error(`The specimen ${id} does not exist`);
         }
+
         await ctx.stub.deleteState(id);
+        console.log(`Specimen ${id} deleted`);
     }
 
     /**
@@ -386,14 +428,18 @@ export class SpecimenContract extends Contract {
         currentOwner: string,
         newOwner: string,
     ): Promise<Specimen> {
+        console.info(`Transferring specimen ${id} from ${currentOwner} to ${newOwner}`);
+
         const specimen: Specimen = await this.ReadSpecimen(ctx, id);
 
         if (specimen.owner !== currentOwner) {
             throw new Error(`Specimen ${id} is not owned by ${currentOwner}`);
         }
+
         specimen.owner = newOwner;
 
         await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(specimen))));
+        console.log(`${newOwner} is the new owner of specimen ${id}`);
 
         return specimen;
     }
@@ -413,6 +459,8 @@ export class SpecimenContract extends Contract {
         id: string,
         status: SpecimenStatus,
     ): Promise<Specimen> {
+        console.info(`Changing specimen ${id} status to ${status}`);
+
         const specimen: Specimen = await this.ReadSpecimen(ctx, id);
 
         if (!this.canTransition(specimen, status)) {
@@ -420,9 +468,11 @@ export class SpecimenContract extends Contract {
                 `The status for the specimen ${id} cannot transition from ${specimen.status} to ${status}`,
             );
         }
+
         specimen.status = status;
 
         await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(specimen))));
+        console.log(`Specimen ${id} status is now ${status}`);
 
         return specimen;
     }
