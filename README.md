@@ -8,6 +8,31 @@ This repository contains my bachelor's project in computer science completed at 
 
 The project is about the creation of a traceability system for pathological anatomy samples based on blockchain
 
+## Project Structure
+
+This section describes the folder and file structure of the project:
+
+```
+.
+├── caliper-tests
+├── chaincode
+├── docs
+├── rest-api
+├── scripts
+├── test-network
+├── CHANGELOG.md
+└── README.md
+```
+
+- **caliper-tests:** Folder containing Hyperledger Caliper tests.
+- **chaincode:** Folder containing smart contracts for Hyperledger Fabric.
+- **docs:** Project documentation folder.
+- **rest-api:** Folder containing the Node.js REST API application.
+- **scripts:** Folder containing utility scripts.
+- **test-network:** Folder containing the Hyperledger Fabric test network setup.
+- **CHANGELOG.md:** Changelog file for tracking project changes.
+- **README.md:** This file.
+
 ## Prerequisites
 
 Before you start, you must install some prerequisite technology required:
