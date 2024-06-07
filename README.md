@@ -4,6 +4,8 @@ Traceability system of pathological anatomy samples based on Blockchain.
 
 ## Introduction
 
+ADAPTATION COURSE TO THE DEGREE IN COMPUTER ENGINEERING (CAI) - PER 8270 Sept 2023
+
 This repository contains my bachelor's project in computer science completed at [UNIR](https://www.unir.net/).
 
 The project is about the creation of a traceability system for pathological anatomy samples based on blockchain
