@@ -1,0 +1,6 @@
+# Ignore everything
+/*
+
+# Except app and related folders
+!/src
+!/test

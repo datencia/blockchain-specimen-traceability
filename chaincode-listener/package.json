@@ -1,0 +1,41 @@
+{
+  "name": "chaincode-listener",
+  "version": "0.1.0",
+  "description": "A project to listen for events emitted by a chaincode on Hyperledger Fabric.",
+  "author": "David Atencia",
+  "license": "ISC",
+  "keywords": [
+    "hyperledger",
+    "fabric",
+    "chaincode",
+    "events",
+    "listener",
+    "blockchain"
+  ],
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "prestart": "rimraf ./dist && npm run build",
+    "start": "node dist/index.js",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@tsconfig/node18": "^18.2.4",
+    "@types/node": "^20.14.2",
+    "@typescript-eslint/eslint-plugin": "^7.12.0",
+    "@typescript-eslint/parser": "^7.12.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "prettier": "^3.3.1",
+    "rimraf": "^5.0.7",
+    "typescript": "^5.4.5"
+  }
+}
