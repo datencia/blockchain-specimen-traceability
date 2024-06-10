@@ -12,8 +12,8 @@
     "listener",
     "blockchain"
   ],
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "main": "dist/app.js",
+  "typings": "dist/app.d.ts",
   "engines": {
     "node": ">=18"
   },
@@ -21,12 +21,15 @@
     "build": "tsc",
     "watch": "tsc --watch",
     "prestart": "rimraf ./dist && npm run build",
-    "start": "node dist/index.js",
+    "start": "node dist/app.js",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@grpc/grpc-js": "^1.10.8",
+    "@hyperledger/fabric-gateway": "^1.5.1",
+    "chalk": "^4.1.2",
     "dotenv": "^16.4.5",
     "joi": "^17.13.1"
   },
