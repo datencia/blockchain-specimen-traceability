@@ -297,7 +297,10 @@ export class SpecimenContract extends Contract {
             orderNumber,
             status,
         };
-        await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(specimen))));
+        const assetBuffer = Buffer.from(stringify(sortKeysRecursive(specimen)));
+
+        await ctx.stub.putState(id, assetBuffer);
+        ctx.stub.setEvent('lab_order_issued', assetBuffer);
         console.log(`Order ${orderNumber} issued to the lab for specimen ${id}`);
 
         return specimen;
@@ -350,7 +353,10 @@ export class SpecimenContract extends Contract {
             receivedTime,
             status,
         };
-        await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(specimen))));
+        const assetBuffer = Buffer.from(stringify(sortKeysRecursive(specimen)));
+
+        await ctx.stub.putState(id, assetBuffer);
+        ctx.stub.setEvent('lab_case_registered', assetBuffer);
         console.log(`Lab case ${caseNumber} created for specimen ${id}`);
 
         return specimen;
@@ -472,8 +478,12 @@ export class SpecimenContract extends Contract {
         }
 
         specimen.status = status;
+        const assetBuffer = Buffer.from(stringify(sortKeysRecursive(specimen)));
 
-        await ctx.stub.putState(id, Buffer.from(stringify(sortKeysRecursive(specimen))));
+        await ctx.stub.putState(id, assetBuffer);
+        if (status === 'INFORMED') {
+            ctx.stub.setEvent('specimen_case_informed', assetBuffer);
+        }
         console.log(`Specimen ${id} status is now ${status}`);
 
         return specimen;
