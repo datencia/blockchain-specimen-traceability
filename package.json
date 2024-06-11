@@ -1,0 +1,15 @@
+{
+  "name": "blockchain-specimen-traceability",
+  "version": "0.1.0",
+  "description": "Traceability system of pathological anatomy samples based on Blockchain.",
+  "author": "David Atencia",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "workspaces": ["apps/*"]
+}
