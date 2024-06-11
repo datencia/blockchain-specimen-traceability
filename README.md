@@ -90,6 +90,21 @@ Now you can interact with the chaincode using the REST API provided listening on
 Once the application is running, open your browser and navigate to `http://localhost:3000/explorer`
 to see the OpenApi specification.
 
+### Chaincode Events
+
+Alternatively, you can also run a small application that will listen for events produced by the chaincode.
+This application is only provided as an example. Each time it receives an event from the chaincode it produces a
+console echo to show that the event has been captured.
+
+To run this application, open a new command terminal and run:
+
+```shell
+$ cd ../chaincode-listener
+$ ./scripts/generateEnv.sh
+$ npm install
+$ npm start
+```
+
 ## Clean up
 
 When you are finished, you can bring down the test network (from the `test-network` folder). The command will remove all
