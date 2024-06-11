@@ -11,8 +11,8 @@
     "benchmark:write": "caliper launch manager --caliper-workspace . --caliper-benchconfig benchmarks/config-write-test.yaml --caliper-networkconfig networks/test-network.yaml --caliper-report-path report-write-benchmark.html"
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.10.3",
+    "@grpc/grpc-js": "^1.10.9",
     "@hyperledger/caliper-cli": "^0.6.0",
-    "@hyperledger/fabric-gateway": "^1.5.0"
+    "@hyperledger/fabric-gateway": "^1.5.1"
   }
 }
