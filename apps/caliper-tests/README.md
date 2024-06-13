@@ -9,17 +9,10 @@ solutions with custom use cases, and get a set of performance test results.
 
 ## Running a Benchmark
 
-To run the benchmarks present in this folder
+Make sure you have installed the project dependencies as described in the main repository [README](../../README.md) file.
+Then execute the next command to run the benchmarks present in this folder:
 
-1. Install the dependencies
-
-   ```shell
-   $ npm install
-   ```
-
-1. Run the benchmarks
-
-   ```shell
-   $ npm run benchmark:read
-   $ npm run benchmark:write
-   ```
+```shell
+$ npm run benchmark:read
+$ npm run benchmark:write
+```

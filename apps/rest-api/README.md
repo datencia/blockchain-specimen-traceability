@@ -3,19 +3,13 @@
 
 Demo application (REST API) to interact with the chaincode deployed on Hyperledger Fabric blockchain.
 
-## Installation
+## Quickstart
 
-Generate a `.env` sample file (using the utility script `initialize_env.sh` if you have not already done so), then
-install the project dependencies.
-
-```bash
-$ npm install
-```
-
-## Running the app
+Make sure you have installed the project dependencies and generated the `.env` configuration file as
+described in the main repository [README](../../README.md) file. Then run the next command:
 
 ```bash
-$ npm run start
+$ npm start
 ```
 
 Now you can interact with the chaincode using the REST API provided listening on port 3000.

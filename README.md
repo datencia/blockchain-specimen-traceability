@@ -63,10 +63,10 @@ Before you start, you must install some prerequisite technology required:
    $ cd blockchain-specimen-traceability
    ```
 
-1. Install the Hyperledger Fabric docker images and binaries
+1. Install the project dependencies and the Hyperledger Fabric docker images and binaries
 
    ```shell
-   $ ./scripts/install.sh
+   $ npm install
    ```
 
 1. Generate the `.env` files with the sample configuration for the demo applications
@@ -89,14 +89,14 @@ Before you start, you must install some prerequisite technology required:
    $ cd test-network
    $ export PATH=${PWD}/../bin:$PATH
    $ export FABRIC_CFG_PATH=$PWD/../config/
-   $ ./network.sh deployCC -ccn basic -ccp ../chaincode -ccl typescript
+   $ ./network.sh deployCC -ccn basic -ccp ../apps/chaincode -ccl typescript
    ```
 
-1. Run the demo application (REST API) (from the `rest-api` folder)
+1. Run the demo application (REST API)
 
    ```shell
-   $ cd rest-api
-   $ npm install && npm start
+   $ cd apps/rest-api
+   $ npm start
    ```
 
 Now you can interact with the chaincode using the REST API provided listening on port 3000.
@@ -113,8 +113,8 @@ console echo to show that the event has been captured.
 To run this application, open a new command terminal and run:
 
 ```shell
-$ cd chaincode-listener
-$ npm install && npm start
+$ cd apps/chaincode-listener
+$ npm start
 ```
 
 ## Clean up
