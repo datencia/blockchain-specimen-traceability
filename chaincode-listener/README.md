@@ -4,9 +4,9 @@ A project to listen for events emitted by the specimen chaincode on Hyperledger 
 
 ## Quickstart
 
-Generate a `.env` sample file, install the project dependencies, and start the app.
+Generate a `.env` sample file (using the utility script `initialize_env.sh` if you have not already done so),
+install the project dependencies, and start the app.
 
 ```shell
-$ ./scripts/generateEnv.sh
 $ npm install && npm start
 ```

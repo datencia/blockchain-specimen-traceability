@@ -5,9 +5,11 @@ Demo application (REST API) to interact with the chaincode deployed on Hyperledg
 
 ## Installation
 
+Generate a `.env` sample file (using the utility script `initialize_env.sh` if you have not already done so), then
+install the project dependencies.
+
 ```bash
 $ npm install
-$ ./scripts/generateEnv.sh
 ```
 
 ## Running the app

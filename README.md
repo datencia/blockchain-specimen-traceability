@@ -61,6 +61,13 @@ Before you start, you must install some prerequisite technology required:
    $ ./scripts/install.sh
    ```
 
+1. Generate the `.env` files with the sample configuration for the demo applications
+
+   ```shell
+   $ ./scripts/initialize_env.sh rest-api
+   $ ./scripts/initialize_env.sh chaincode-listener
+   ```
+
 1. Create the test network and a channel (from the `test-network` folder)
 
    ```shell
@@ -71,6 +78,7 @@ Before you start, you must install some prerequisite technology required:
 1. Deploy the smart contracts (from the `test-network` folder)
 
    ```shell
+   $ cd test-network
    $ export PATH=${PWD}/../bin:$PATH
    $ export FABRIC_CFG_PATH=$PWD/../config/
    $ ./network.sh deployCC -ccn basic -ccp ../chaincode -ccl typescript
@@ -79,10 +87,8 @@ Before you start, you must install some prerequisite technology required:
 1. Run the demo application (REST API) (from the `rest-api` folder)
 
    ```shell
-   $ cd ../rest-api
-   $ ./scripts/generateEnv.sh
-   $ npm install
-   $ npm start
+   $ cd rest-api
+   $ npm install && npm start
    ```
 
 Now you can interact with the chaincode using the REST API provided listening on port 3000.
@@ -99,10 +105,8 @@ console echo to show that the event has been captured.
 To run this application, open a new command terminal and run:
 
 ```shell
-$ cd ../chaincode-listener
-$ ./scripts/generateEnv.sh
-$ npm install
-$ npm start
+$ cd chaincode-listener
+$ npm install && npm start
 ```
 
 ## Clean up
