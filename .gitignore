@@ -142,10 +142,11 @@ dist
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# Nx cache files
-.nx/
-
 # Hyperledger Fabric binaries
 /bin
 /builders
 /config
+
+# Nx cache files
+.nx/cache
+.nx/workspace-data

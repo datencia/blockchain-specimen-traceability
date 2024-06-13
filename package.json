@@ -11,5 +11,10 @@
   "directories": {
     "doc": "docs"
   },
-  "workspaces": ["apps/*"]
+  "workspaces": [
+    "apps/*"
+  ],
+  "devDependencies": {
+    "nx": "19.2.3"
+  }
 }

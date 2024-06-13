@@ -25,6 +25,9 @@ This section describes the folder and file structure of the project:
 ├── scripts
 ├── test-network
 ├── CHANGELOG.md
+├── nx.json
+├── package.json
+├── package-lock.json
 └── README.md
 ```
 
@@ -37,6 +40,9 @@ This section describes the folder and file structure of the project:
 - **scripts:** Folder containing utility scripts.
 - **test-network:** Folder containing the Hyperledger Fabric test network setup.
 - **CHANGELOG.md:** Changelog file for tracking project changes.
+- **nx.json:** Configures Nx workspace settings, defining project structure and dependency management specific to Nx.
+- **package.json:** Defines project metadata, scripts, and dependency management.
+- **package-lock.json:** Locks down the exact versions of dependencies for reproducible builds.
 - **README.md:** This file.
 
 ## Prerequisites
