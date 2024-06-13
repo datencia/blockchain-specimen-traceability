@@ -16,22 +16,24 @@ This section describes the folder and file structure of the project:
 
 ```
 .
-├── caliper-tests
-├── chaincode
-├── chaincode-listener
+├── apps
+│   ├── caliper-tests
+│   ├── chaincode
+│   ├── chaincode-listener
+│   └── rest-api
 ├── docs
-├── rest-api
 ├── scripts
 ├── test-network
 ├── CHANGELOG.md
 └── README.md
 ```
 
-- **caliper-tests:** Folder containing Hyperledger Caliper tests.
-- **chaincode:** Folder containing smart contracts for Hyperledger Fabric.
-- **chaincode-listener:** Folder containing a small Node.js application listening for smart contract events.
+- **apps:** Folder containing the chaincode and the demo applications.
+   - **caliper-tests:** Folder containing Hyperledger Caliper tests.
+   - **chaincode:** Folder containing smart contracts for Hyperledger Fabric.
+   - **chaincode-listener:** Folder containing a small Node.js application listening for smart contract events.
+   - **rest-api:** Folder containing the Node.js REST API application.
 - **docs:** Project documentation folder.
-- **rest-api:** Folder containing the Node.js REST API application.
 - **scripts:** Folder containing utility scripts.
 - **test-network:** Folder containing the Hyperledger Fabric test network setup.
 - **CHANGELOG.md:** Changelog file for tracking project changes.
