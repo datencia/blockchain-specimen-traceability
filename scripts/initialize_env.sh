@@ -23,6 +23,6 @@ fi
 
 cp "$ENV_EXAMPLE_FILE" "$ENV_FILE"
 
-chmod 600 "$ENV_FILE"
+chmod 664 "$ENV_FILE"
 
 echo "The .env file has been initialized for the project '$PROJECT'."

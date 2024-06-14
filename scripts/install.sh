@@ -7,4 +7,4 @@ ROOTDIR=$(cd "$(dirname "$0")" && pwd)
 
 echo "====>  Installing Hyperledger Fabric binaries & Docker images..."
 
-. ${ROOTDIR}/install-fabric.sh --fabric-version $VERSION --ca-version $CA_VERSION binary docker
+. "${ROOTDIR}"/install-fabric.sh --fabric-version $VERSION --ca-version $CA_VERSION binary docker

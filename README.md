@@ -76,20 +76,16 @@ Before you start, you must install some prerequisite technology required:
    $ ./scripts/initialize_env.sh chaincode-listener
    ```
 
-1. Create the test network and a channel (from the `test-network` folder)
+1. Create the test network and a channel
 
    ```shell
-   $ cd test-network
-   $ ./network.sh up createChannel
+   $ npm run network:start
    ```
 
-1. Deploy the smart contracts (from the `test-network` folder)
+1. Deploy the smart contract
 
    ```shell
-   $ cd test-network
-   $ export PATH=${PWD}/../bin:$PATH
-   $ export FABRIC_CFG_PATH=$PWD/../config/
-   $ ./network.sh deployCC -ccn basic -ccp ../apps/chaincode -ccl typescript
+   $ npm run chaincode:deploy
    ```
 
 1. Run the demo application (REST API)
@@ -119,9 +115,9 @@ $ npm start
 
 ## Clean up
 
-When you are finished, you can bring down the test network (from the `test-network` folder). The command will remove all
+When you are finished, you can bring down the test network. The npm script provided will remove all
 the nodes of the test network, and delete any ledger data that you created.
 
 ```shell
-./network.sh down
+$ npm run network:stop
 ```
