@@ -91,8 +91,7 @@ Before you start, you must install some prerequisite technology required:
 1. Run the demo application (REST API)
 
    ```shell
-   $ cd apps/rest-api
-   $ npm start
+   $ npx nx run rest-api:start
    ```
 
 Now you can interact with the chaincode using the REST API provided listening on port 3000.
@@ -109,8 +108,7 @@ console echo to show that the event has been captured.
 To run this application, open a new command terminal and run:
 
 ```shell
-$ cd apps/chaincode-listener
-$ npm start
+$ npx nx run chaincode-listener:start
 ```
 
 ## Clean up
