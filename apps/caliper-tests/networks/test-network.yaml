@@ -4,13 +4,13 @@ version: "2.0.0"
 caliper:
     blockchain: fabric
     command:
-        start: ../test-network/network.sh up createChannel && ../test-network/network.sh deployCC -ccp ../chaincode -ccn basic -ccl typescript
-        end: ../test-network/network.sh down
+        start: ../../test-network/network.sh up createChannel && ../../test-network/network.sh deployCC -ccp ../apps/chaincode -ccn basic -ccl typescript
+        end: ../../test-network/network.sh down
 
 info:
     Version: 0.1.0
     Size: 2 Orgs
-    Orderer: Solo
+    Orderer: Raft
     Distribution: Single Host
     StateDB: LevelDB
 
@@ -28,8 +28,8 @@ organizations:
           certificates:
               - name: "User1"
                 clientPrivateKey:
-                    path: "../test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/priv_sk"
+                    path: "../../test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/priv_sk"
                 clientSignedCert:
-                    path: "../test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/User1@org1.example.com-cert.pem"
+                    path: "../../test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/User1@org1.example.com-cert.pem"
       connectionProfile:
-          path: "../test-network/organizations/peerOrganizations/org1.example.com/connection-org1.yaml"
+          path: "../../test-network/organizations/peerOrganizations/org1.example.com/connection-org1.yaml"
