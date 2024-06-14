@@ -4,8 +4,8 @@ version: "2.0.0"
 caliper:
     blockchain: fabric
     command:
-        start: ../../test-network/network.sh up createChannel && ../../test-network/network.sh deployCC -ccp ../apps/chaincode -ccn basic -ccl typescript
-        end: ../../test-network/network.sh down
+        start: ../../scripts/start-hyperledger-network.sh && ../../scripts/deploy-chaincode.sh
+        end: ../../scripts/stop-hyperledger-network.sh
 
 info:
     Version: 0.1.0
