@@ -1,0 +1,389 @@
+{
+	"info": {
+		"_postman_id": "aeaa2507-b6a9-4438-af2b-47315e01a450",
+		"name": "REST API TFG: Specimens Blockchain",
+		"description": "## Introduction\n\nThis Postman collection is part of my bachelor's project in computer science completed at [UNIR](https://www.unir.net/).\n\nADAPTATION COURSE TO THE DEGREE IN COMPUTER ENGINEERING (CAI) - PER 8270 Sept 2023\n\n## Description\n\nREST API to interact with the specimen chaincode deployed on Hyperledger Fabric blockchain to manage the traceability of samples in an anatomical pathology laboratory.\n\nIt shows how to create, read, update, transfer and delete a specimen.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "552195"
+	},
+	"item": [
+		{
+			"name": "Init the ledger",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/specimens/init-ledger",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"specimens",
+						"init-ledger"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all specimens",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/specimens",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"specimens"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get specimen by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/specimens/281e986c-da5f-4c80-94eb-c4545de1e1e1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"specimens",
+						"281e986c-da5f-4c80-94eb-c4545de1e1e1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get specimen history by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/specimens/281e986c-da5f-4c80-94eb-c4545de1e1e1/history",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"specimens",
+						"281e986c-da5f-4c80-94eb-c4545de1e1e1",
+						"history"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register new extracted specimen",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Skin\",\n    \"label\": \"B24-0001-TEST-A\",\n    \"method\": \"Biopsy\",\n    \"collectionTime\": \"2024-05-15T14:30:50.000Z\",\n    \"collector\": \"Practitioner/datencia\",\n    \"patientId\": \"Patient/jdoe\",\n    \"owner\": \"User1@org1.example.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/specimens",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"specimens"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Transfer a specimen between users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specimenId\": \"281e986c-da5f-4c80-94eb-c4545de1e1e1\",\n    \"senderId\": \"User1@org1.example.com\",\n    \"recipientId\": \"User2@org1.example.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/specimens/transfer",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"specimens",
+						"transfer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change specimen status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"status\": \"GROSSING\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/specimens/281e986c-da5f-4c80-94eb-c4545de1e1e1/status",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"specimens",
+						"281e986c-da5f-4c80-94eb-c4545de1e1e1",
+						"status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete specimen by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful DELETE request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/specimens/281e986c-da5f-4c80-94eb-c4545de1e1e1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"specimens",
+						"281e986c-da5f-4c80-94eb-c4545de1e1e1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a laboratory order for a given specimen",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specimenId\": \"281e986c-da5f-4c80-94eb-c4545de1e1e1\",\n    \"orderNumber\": \"B24-0001-TEST-A\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/orders",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a laboratory case",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specimenId\": \"281e986c-da5f-4c80-94eb-c4545de1e1e1\",\n    \"caseNumber\": \"24B0000710\",\n    \"receivedTime\": \"2024-06-01T17:09:00.000Z\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/cases",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"cases"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "username",
+				"value": "{{username}}",
+				"type": "string"
+			},
+			{
+				"key": "password",
+				"value": "{{password}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
