@@ -65,7 +65,10 @@ elif [ "$CC_SRC_LANGUAGE" = "typescript" ]; then
 
   infoln "Compiling TypeScript code into JavaScript..."
   pushd $CC_SRC_PATH
-  npm install
+
+  # Disabled as the chaincode dependencies will be installed globally within the project
+  # npm install
+
   npm run build
   popd
   successln "Finished compiling TypeScript code into JavaScript"
