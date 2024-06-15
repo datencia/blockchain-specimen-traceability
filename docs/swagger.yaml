@@ -6,14 +6,14 @@ paths:
       summary: Get all the current specimens stored in the ledger
       parameters: []
       responses:
-        "200":
+        '200':
           description: Return all specimens stored in the ledger
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Specimen"
+                  $ref: '#/components/schemas/Specimen'
       tags:
         - Specimens
     post:
@@ -25,14 +25,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateSpecimenDto"
+              $ref: '#/components/schemas/CreateSpecimenDto'
       responses:
-        "201":
+        '201':
           description: The specimen has been created successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Specimen"
+                $ref: '#/components/schemas/Specimen'
       tags:
         - Specimens
   /api/specimens/{id}:
@@ -47,12 +47,12 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: Return the requested specimen
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Specimen"
+                $ref: '#/components/schemas/Specimen'
       tags:
         - Specimens
     delete:
@@ -66,7 +66,7 @@ paths:
           schema:
             type: string
       responses:
-        "204":
+        '204':
           description: The specimen has been deleted successfully
       tags:
         - Specimens
@@ -82,14 +82,14 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: Return the requested specimen transaction history
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Transaction"
+                  $ref: '#/components/schemas/Transaction'
       tags:
         - Specimens
   /api/specimens/transfer:
@@ -102,14 +102,39 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/TransferOwnershipDto"
+              $ref: '#/components/schemas/TransferOwnershipDto'
       responses:
-        "200":
+        '200':
           description: Return the specimen updated
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Specimen"
+                $ref: '#/components/schemas/Specimen'
+      tags:
+        - Specimens
+  /api/specimens/{id}/status:
+    put:
+      operationId: SpecimensController_updateSpecimenStatus
+      summary: Update the status of a given specimen
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStatusDto'
+      responses:
+        '200':
+          description: Return the specimen updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Specimen'
       tags:
         - Specimens
   /api/specimens/init-ledger:
@@ -118,20 +143,50 @@ paths:
       summary: Create the initial set of specimens in the ledger
       parameters: []
       responses:
-        "204":
+        '204':
           description: Ledger populated with an initial set of specimens
       tags:
         - Specimens
+  /api/orders:
+    post:
+      operationId: OrdersController_createSpecimenOrder
+      summary: Create a laboratory order for a given specimen
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderDto'
+      responses:
+        '204':
+          description: ''
+      tags:
+        - Orders
+  /api/cases:
+    post:
+      operationId: CasesController_createLabCase
+      summary: Create a laboratory case for a given specimen
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCaseDto'
+      responses:
+        '204':
+          description: ''
+      tags:
+        - Cases
 info:
   title: Specimens API
   description: The specimens blockchain-based API
-  version: "1.0"
+  version: '1.0'
   contact: {}
 tags:
   - name: Specimens
-    description: >-
-      Operations to interact with the chaincode for specimen traceability
-      management in Hyperledger Fabric.
+    description: Operations to interact with the chaincode for specimen traceability management in Hyperledger Fabric.
 servers: []
 components:
   schemas:
@@ -153,12 +208,10 @@ components:
         method:
           type: string
           example: Biopsy
-          description: >-
-            Method used to perform collection (e.g. biopsy, cytology,
-            aspiration, etc.)
+          description: Method used to perform collection (e.g. biopsy, cytology, aspiration, etc.)
         collectionTime:
           type: string
-          example: "2024-05-15T14:30:50.000Z"
+          example: '2024-05-15T14:30:50.000Z'
           description: Collection date & time
         collector:
           type: string
@@ -178,15 +231,15 @@ components:
           description: The person who currently holds the specimen
         orderNumber:
           type: string
-          example: "384858"
+          example: '384858'
           description: The order number associated with the specimen
         caseNumber:
           type: string
           example: 24B0000710
           description: Identifier assigned by the laboratory
         receivedTime:
-          type: number
-          example: "2024-05-16T12:25:00.000Z"
+          type: string
+          example: '2024-05-16T12:25:00.000Z'
           description: The time when specimen is received by the laboratory
       required:
         - id
@@ -215,12 +268,10 @@ components:
         method:
           type: string
           example: Biopsy
-          description: >-
-            Method used to perform collection (e.g. biopsy, cytology,
-            aspiration, etc.)
+          description: Method used to perform collection (e.g. biopsy, cytology, aspiration, etc.)
         collectionTime:
           type: string
-          example: "2024-05-15T14:30:50.000Z"
+          example: '2024-05-15T14:30:50.000Z'
           description: Collection date & time
         collector:
           type: string
@@ -255,7 +306,7 @@ components:
           description: Indicates whether the key has been deleted
         timestamp:
           type: string
-          example: "2024-05-11T08:29:33.734Z"
+          example: '2024-05-11T08:29:33.734Z'
           description: The time at which the modification occurred
         data:
           type: object
@@ -284,3 +335,53 @@ components:
         - specimenId
         - senderId
         - recipientId
+    UpdateStatusDto:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The new status for the specimen
+          enum:
+            - EXTRACTED
+            - ORDERED
+            - ACCESSIONING
+            - GROSSING
+            - PROCESSING
+            - DIAGNOSTIC
+            - INFORMED
+          example: GROSSING
+      required:
+        - status
+    CreateOrderDto:
+      type: object
+      properties:
+        specimenId:
+          type: string
+          example: 8acffb0a-f569-4da2-be14-6b0f6c97dbaa
+          description: The specimen identifier in the ledger being ordered
+        orderNumber:
+          type: string
+          example: '384858'
+          description: The order number associated with the specimen
+      required:
+        - specimenId
+        - orderNumber
+    CreateCaseDto:
+      type: object
+      properties:
+        specimenId:
+          type: string
+          example: 8acffb0a-f569-4da2-be14-6b0f6c97dbaa
+          description: The specimen identifier in the ledger being accessioning
+        caseNumber:
+          type: string
+          example: 24B0000710
+          description: Identifier assigned by the laboratory
+        receivedTime:
+          type: string
+          example: '2024-05-16T12:25:00.000Z'
+          description: The time when specimen is received by the laboratory
+      required:
+        - specimenId
+        - caseNumber
+        - receivedTime
