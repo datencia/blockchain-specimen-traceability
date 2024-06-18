@@ -15,7 +15,7 @@ test:
               module: benchmarks/workloads/read-specimen.js
               arguments:
                   contractId: basic
-                  contractVersion: 0.1.0
+                  contractVersion: 0.2.0
                   assets: 500
         - label: moderate-load
           contractId: basic
@@ -28,7 +28,7 @@ test:
               module: benchmarks/workloads/read-specimen.js
               arguments:
                   contractId: basic
-                  contractVersion: 0.1.0
+                  contractVersion: 0.2.0
                   assets: 500
         - label: high-load
           contractId: basic
@@ -41,7 +41,7 @@ test:
               module: benchmarks/workloads/read-specimen.js
               arguments:
                   contractId: basic
-                  contractVersion: 0.1.0
+                  contractVersion: 0.2.0
                   assets: 500
 
 monitors:

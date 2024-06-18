@@ -15,7 +15,7 @@ test:
               module: benchmarks/workloads/create-specimen.js
               arguments:
                   contractId: basic
-                  contractVersion: 0.1.0
+                  contractVersion: 0.2.0
         - label: moderate-load
           contractId: basic
           txNumber: 4000
@@ -27,7 +27,7 @@ test:
               module: benchmarks/workloads/create-specimen.js
               arguments:
                   contractId: basic
-                  contractVersion: 0.1.0
+                  contractVersion: 0.2.0
         - label: high-load
           contractId: basic
           txNumber: 6000
@@ -39,7 +39,7 @@ test:
               module: benchmarks/workloads/create-specimen.js
               arguments:
                   contractId: basic
-                  contractVersion: 0.1.0
+                  contractVersion: 0.2.0
 
 monitors:
     resource:

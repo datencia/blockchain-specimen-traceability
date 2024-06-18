@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.2.0](https://github.com/datencia/blockchain-specimen-traceability/compare/v0.1.0...v0.2.0) (2024-06-18)
+
+
+### Features
+
+* **chaincode-listener:** add initial config ([1c1b453](https://github.com/datencia/blockchain-specimen-traceability/commit/1c1b453e2aa7a5c2a96b43805175ec753aa06cff))
+* **chaincode-listener:** listen for specimen contract events ([a1427d6](https://github.com/datencia/blockchain-specimen-traceability/commit/a1427d62d10f80c220fda245a8a9b0a51de87c80))
+* **chaincode:** create new function to change the status of a given specimen ([b959e05](https://github.com/datencia/blockchain-specimen-traceability/commit/b959e05fb8c3a83fa5ed31ec57bc4d30424aae22))
+* **chaincode:** create new function to issue a study order to the lab for a given specimen ([5f030cc](https://github.com/datencia/blockchain-specimen-traceability/commit/5f030cc2902a842ae46c2b0424b81b89a0c190e3))
+* **chaincode:** create new function to set as received by the lab a given specimen ([758e94f](https://github.com/datencia/blockchain-specimen-traceability/commit/758e94fa3af1b755b76f5904555869b27a7b7379))
+* **chaincode:** send events to notify some points in the specimen life-cycle ([f4cb43e](https://github.com/datencia/blockchain-specimen-traceability/commit/f4cb43e53994d08cb17ab8d8a8255ade2b189520))
+* **chaincode:** set the user User1@org1.example.com as the owner for the initial specimen set ([df276a6](https://github.com/datencia/blockchain-specimen-traceability/commit/df276a6070188d697bc6515810599a102d0f4570))
+* **chaincode:** validate the current owner and return the specimen updated when transferring a specimen to another user ([5908aae](https://github.com/datencia/blockchain-specimen-traceability/commit/5908aae96c3f7f94b67f0ddc4834176bc535cef1))
+* **rest-api:** add endpoint to change the status of a given specimen ([54c05bc](https://github.com/datencia/blockchain-specimen-traceability/commit/54c05bc8786c621395f154bb8f97a0921d603614))
+* **rest-api:** add endpoint to create a laboratory case for a given specimen ([177a69e](https://github.com/datencia/blockchain-specimen-traceability/commit/177a69e976ba9a382d52f26dcb7da8fd7dfc33d2))
+* **rest-api:** add endpoint to set a laboratory order for a given specimen ([662c12a](https://github.com/datencia/blockchain-specimen-traceability/commit/662c12a8030a512f2fdd3a65b8c8723e86e2c7fa))
+* **rest-api:** pass the current owner to the transfer specimen chaincode function ([2422e2d](https://github.com/datencia/blockchain-specimen-traceability/commit/2422e2d897ef3c7210d52003b030fc8855ec5cb1))
+* **rest-api:** save logs to a file ([3590017](https://github.com/datencia/blockchain-specimen-traceability/commit/35900178fd775637234e35d156bf680690d4e685))
+
+
+### Bug Fixes
+
+* **chaincode:** avoid ChangeSpecimenStatus function to set the status as ORDERED or ACCESSIONING ([dd0dc22](https://github.com/datencia/blockchain-specimen-traceability/commit/dd0dc22b25da5472271786a7ca3119d10edc1aba))
+* **chaincode:** validate RegisterExtractedSpecimen arguments ([5d5b382](https://github.com/datencia/blockchain-specimen-traceability/commit/5d5b3825c932c506400c4512b17f2a2ff246c7cc))
+* **rest-api:** catch and re-throw transaction errors ([d45c44d](https://github.com/datencia/blockchain-specimen-traceability/commit/d45c44d1abc3e0b8af3893a58c5a1d089fe600f9))
+* **rest-api:** close the gateway connection when it is no longer required ([a2338a5](https://github.com/datencia/blockchain-specimen-traceability/commit/a2338a5e619910bf751fb3bfba7af2be06b4000a))
+
 ## 0.1.0 (2024-05-14)
 
 
